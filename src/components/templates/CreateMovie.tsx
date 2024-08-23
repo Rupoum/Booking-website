@@ -37,7 +37,9 @@ export const CreateMovie = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, files } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
@@ -45,7 +47,7 @@ export const CreateMovie = () => {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setLoading(true);
@@ -70,7 +72,9 @@ export const CreateMovie = () => {
       };
 
       await axios.post("http://localhost:5000/api/movie/movie", movieData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("authtoken")}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
+        },
       });
 
       toast({ title: "Movie created successfully." });
@@ -140,7 +144,9 @@ export const CreateMovie = () => {
                 value={form.genre}
                 onChange={handleChange}
               >
-                <option value="" disabled>Select genre</option>
+                <option value="" disabled>
+                  Select genre
+                </option>
                 {Object.values(Genre).map((type) => (
                   <option key={type} value={type}>
                     {type}
@@ -156,7 +162,13 @@ export const CreateMovie = () => {
               name="posterUrl"
               onChange={handleChange}
             />
-            {imageURL && <img src={imageURL} alt="Uploaded Poster" style={{ maxWidth: "200px" }} />}
+            {imageURL && (
+              <img
+                src={imageURL}
+                alt="Uploaded Poster"
+                style={{ maxWidth: "200px" }}
+              />
+            )}
           </Label>
         </div>
         <Button loading={loading || uploading} type="submit">
