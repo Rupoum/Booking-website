@@ -10,6 +10,7 @@ import { Button } from "../atoms/button";
 import { useRouter } from "next/navigation";
 import { app } from "@/components/utils/config/firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { any } from "zod";
 
 enum Genre {
   Action = "Action",
@@ -60,9 +61,9 @@ export const CreateMovie = () => {
         const downloadURL = await getDownloadURL(storageRef);
 
         setImageURL(downloadURL);
-        form.posterUrl = downloadURL; // Set the uploaded image URL in the form
+        form.posterUrl = downloadURL; 
+      
       }
-
       const movieData = {
         ...form,
         posterUrl: imageURL || form.posterUrl,

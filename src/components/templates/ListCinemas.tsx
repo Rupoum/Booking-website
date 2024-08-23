@@ -3,15 +3,37 @@ import Image from 'next/image'
 import { Title2 } from '../atoms/typography'
 import { format } from 'date-fns'
 import { AlertBox } from '../molecules/AlertBox'
-import { RouterOutputs } from '@/trpc/clients/types'
-import { trpcClient } from '@/trpc/clients/client'
-import { formatDate } from '@/util/functions'
+import { formatDate } from '@/components/utils/functions'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export interface IListMoviesProps {
-  cinemas: RouterOutputs['cinemas']['cinemas']
+  cinemas: any[]
 }
 
-export const ListCinemas = ({ cinemas }: IListMoviesProps) => {
+export const ListCinemas = () => {
+  const [cinemas, setCinemas] = useState<IListMoviesProps['cinemas']>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCinemas = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/cinema/cinema');
+        setCinemas(response.data);
+      } catch (error) {
+        console.error('Error fetching cinemas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCinemas();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <div>
@@ -26,44 +48,67 @@ export const ListCinemas = ({ cinemas }: IListMoviesProps) => {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export const CinemaInfo = ({
   cinema,
 }: {
-  cinema: RouterOutputs['cinemas']['cinemas'][0]
+  cinema: any
 }) => {
   return (
     <div>
       <div className="text-2xl font-semibold">{cinema.name}</div>
       <div className="text-sm text-gray-600 mt-2">
-        Screens: {cinema.Screens.length}
+        Screens: {cinema.Screens?.length || 0}
       </div>
       <div className="flex flex-col gap-4 mt-8">
-        {cinema.Screens.map((screen) => (
-          <div key={screen.id}>
-            <div className="font-light text-xl ">Screen {screen.number}</div>
+        {cinema.Screens && cinema.Screens.length > 0 ? (
+          cinema.Screens.map((screen: any) => (
+            <div key={screen.id}>
+              <div className="font-light text-xl ">Screen {screen.number}</div>
 
-            {screen.Showtimes.length === 0 ? (
-              <AlertBox>
-                <div>No shows found.</div>
-              </AlertBox>
-            ) : null}
-            <ShowScreenShowtimes screenId={screen.id} />
-          </div>
-        ))}
+              {screen.Showtimes.length === 0 ? (
+                <AlertBox>
+                  <div>No shows found.</div>
+                </AlertBox>
+              ) : null}
+              <ShowScreenShowtimes screenId={screen.id} />
+            </div>
+          ))
+        ) : (
+          <div>No screens available.</div>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
-export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
-  const { data, isLoading } = trpcClient.showtimes.showtimesPerScreen.useQuery({
-    screenId,
-  })
 
-  return data?.map((date) => (
+export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
+  const [showtimes, setShowtimes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchShowtimes = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/screen/screen/${screenId}`);
+        setShowtimes(response.data);
+      } catch (error) {
+        console.error('Error fetching showtimes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchShowtimes();
+  }, [screenId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return showtimes.map((date) => (
     <div key={date.date}>
       <div className="my-8">
         <div className="mb-2 text-lg font-semibold">
@@ -97,5 +142,5 @@ export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
         </div>
       </div>
     </div>
-  ))
+  ));
 }

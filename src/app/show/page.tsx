@@ -6,8 +6,9 @@ import { RecoilRoot } from "recoil";
 return(
     <RecoilRoot>
     <CreateShowtime>
-        
+
     </CreateShowtime>
     </RecoilRoot>
 )
-}export default withAuth(movie,"Admin");
+}
+export default withAuth(movie,"Admin");

@@ -1,13 +1,33 @@
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { trpcServer } from '@/trpc/clients/server'
-import { RouterOutputs } from '@/trpc/clients/types'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export interface IListMoviesProps {}
 
-export const ListMovies = async ({}: IListMoviesProps) => {
-  const movies = await trpcServer.movies.movies.query()
+export const ListMovies = ({}: IListMoviesProps) => {
+  const [movies, setMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/movie/movie');
+        setMovies(response.data);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -16,7 +36,7 @@ export const ListMovies = async ({}: IListMoviesProps) => {
           href={'/admin/movies/new'}
           className="flex items-center gap-2 my-2"
         >
-          <Plus /> Create movie
+          {/* <Plus /> Create movie */}
         </Link>
       </div>
 
@@ -28,17 +48,20 @@ export const ListMovies = async ({}: IListMoviesProps) => {
     </div>
   )
 }
-
 export const MovieInfo = ({
   movie,
 }: {
-  movie: RouterOutputs['movies']['movies'][0]
+  movie: any
 }) => {
+  const imageUrl = movie.posterUrl?.startsWith('http')
+    ? movie.posterUrl
+    : '/film.png'; // Fallback to a default image if the URL is invalid
+
   return (
     <div>
       <Image
-        src={movie.posterUrl || '/film.png'}
-        alt=""
+        src={imageUrl}
+        alt={movie.title || 'Movie Poster'}
         className="aspect-square object-cover rounded shadow-lg"
         width={300}
         height={300}
@@ -49,3 +72,4 @@ export const MovieInfo = ({
     </div>
   )
 }
+

@@ -27,7 +27,7 @@ export const CreateShowtime = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/movie/movie');
         setMovies(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
         console.error('Error fetching movies:', error);
         setError('Failed to fetch movies');
@@ -36,8 +36,9 @@ export const CreateShowtime = () => {
 
     const fetchScreens = async () => {
       try {
-        const response = await axios.get('/api/screens');
+        const response = await axios.get('http://localhost:5000/api/cinema/cinema');
         setScreens(response.data);
+      
       } catch (error) {
         console.error('Error fetching screens:', error);
         setError('Failed to fetch screens');
@@ -80,11 +81,14 @@ export const CreateShowtime = () => {
     setError('');
 
     try {
-      await axios.post('/api/showtimes', {
+      await axios.post('http://localhost:5000/api/screen/screen', {
         movieId: form.movieId,
         screenId: form.screenId,
         showtimes: form.showtimes.map((time) => ({ time: time.time }))
-      });
+      },{
+        headers: { Authorization: `Bearer ${localStorage.getItem("authtoken")}` },
+      }
+    );
       toast({ title: 'Showtimes created successfully.' });
       setForm({ showtimes: [{ time: '' }], screenId: '', movieId: '' });
       router.replace('/manager/cinemas');
@@ -108,7 +112,7 @@ export const CreateShowtime = () => {
           >
             <option value="">Select a movie...</option>
             {movies.map((movie: any) => (
-              <option key={movie._id} value={movie._id}>
+              <option key={movie._id} value={movie._id} ref={movie}>
                 {movie.title}
               </option>
             ))}
@@ -116,20 +120,22 @@ export const CreateShowtime = () => {
         </Label>
 
         <Label title="Screen number">
-          <select
-            name="screenId"
-            value={form.screenId}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded border-input"
-          >
-            <option value="">Select a screen...</option>
-            {screens.map((screen: any) => (
-              <option key={screen.id} value={screen.id}>
-                {screen.Cinema.name} - {screen.number}
+        <select
+          name="screenId"
+          value={form.screenId}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded border-input"
+        >
+          <option value="">Select a screen...</option>
+          {screens.map((cinema: any) =>
+            cinema.screens.map((screen: any) => (
+              <option key={cinema._id} value={cinema._id} >
+                {cinema.name} - Screen{screen.screenno}
               </option>
-            ))}
-          </select>
-        </Label>
+            ))
+          )}
+        </select>
+      </Label>
 
         <Label title="Shows">
           <div className="grid grid-cols-3 gap-2">

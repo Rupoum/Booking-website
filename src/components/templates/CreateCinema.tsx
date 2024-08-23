@@ -36,7 +36,9 @@ interface ScreenState {
   rows: number;
   columns: number;
   price: number;
+  screenno:number;
 }
+
 
 interface CinemaFormData {
   name: string;
@@ -51,6 +53,7 @@ const initialScreenState: ScreenState = {
   rows: 0,
   columns: 0,
   price: 0,
+  screenno:0,
 };
 
 const initialFormData: CinemaFormData = {
@@ -122,6 +125,7 @@ const CreateCinemaContent: React.FC = () => {
         rows: screen.rows,
         columns: screen.columns,
         price: screen.price,
+        screenno:screen.screenno
       })),
     };
 
@@ -234,7 +238,18 @@ const AddScreens: React.FC<AddScreensProps> = ({ screens, onScreenChange, onAddS
                   onChange={(e) => onScreenChange(index, e)}
                   className="text-black dark:text-black"
                 />
+                   
               </Label>
+              <Label title="Screen No.">
+  <Input
+    name="screenno"
+    type="number"
+    value={screen.screenno}
+    onChange={(e) => onScreenChange(index, e)}
+    className="text-black dark:text-black"
+  />
+</Label>
+
               <Label title="Columns">
                 <Input
                   name="columns"
