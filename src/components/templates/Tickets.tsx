@@ -1,40 +1,53 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { getDownloadURL, ref } from 'firebase/storage'
+import axios from 'axios'
 
 import { format } from 'date-fns'
 
 import { Button } from '../atoms/button'
-import { storage } from '@/util/config/firebase'
-import { useAuth } from '@clerk/nextjs'
-import { trpcClient } from '@/trpc/clients/client'
 import { Loading } from '../molecules/Loading'
-import { RouterOutputs } from '@/trpc/clients/types'
-import { SimpleDialog } from '../organisms/SimpleDialog'
+import { SimpleDialog } from '../organism/map/SimpleDialog'
 
 export interface ITicketsProps {}
 
-async function getImageUrl(path: string): Promise<string> {
-  // Create a reference to the file
-  const fileRef = ref(storage, path)
+export const QRCode = ({ url }: { url: string }) => {
+  const [picUrl, setPicUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  // Get the download URL
-  const url = await getDownloadURL(fileRef)
+  useEffect(() => {
+    async function fetchImageUrl() {
+      setLoading(true)
+      try {
+        const response = await axios.get(`/api/getImageUrl`, {
+          params: { path: url },
+        })
+        setPicUrl(response.data.imageUrl)
+      } catch (error) {
+        console.error('Error fetching image URL:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  return url
+    fetchImageUrl()
+  }, [url])
+
+  if (loading) return <Loading />
+
+  return <Image width={200} height={200} src={picUrl || '/film.png'} alt="QR Code" />
 }
 
 export const TicketMovie = ({
   ticket,
 }: {
-  ticket: RouterOutputs['tickets']['myTickets'][0]
+  ticket: any // Replace 'any' with the correct type if available
 }) => {
   const [open, setOpen] = useState(false)
 
   return (
     <div key={ticket.id}>
-      <SimpleDialog open={open} setOpen={setOpen} title={'QR Code'}>
+      <SimpleDialog open={open} setOpen={setOpen} title="QR Code">
         <QRCode url={ticket.qrCode || ''} />
       </SimpleDialog>
       <div className="flex gap-6">
@@ -70,11 +83,11 @@ export const TicketMovie = ({
           </div>
           <div className="mt-4">
             <div>Seats</div>
-            <div className="flex flex-wrap gap-2 ">
+            <div className="flex flex-wrap gap-2">
               {ticket.Bookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="px-1 text-sm bg-white border rounded "
+                  className="px-1 text-sm bg-white border rounded"
                 >
                   {booking.row}-{booking.column}
                 </div>
@@ -96,40 +109,33 @@ export const TicketMovie = ({
 }
 
 export const Tickets = ({}: ITicketsProps) => {
-  const { userId } = useAuth()
-  const [skip, setSkip] = useState(0)
-  const [take, setTake] = useState(6)
-  const { data, isLoading } = trpcClient.tickets.myTickets.useQuery()
+  const [tickets, setTickets] = useState<any[]>([]) // Replace 'any' with the correct type if available
+  const [loading, setLoading] = useState(true)
 
-  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await axios.get('/api/tickets')
+        setTickets(response.data)
+      } catch (error) {
+        console.error('Error fetching tickets:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  if (isLoading) {
+    fetchTickets()
+  }, [])
+
+  if (loading) {
     return <Loading />
   }
 
   return (
     <div className="flex flex-col gap-6">
-      {data?.map((ticket) => <TicketMovie key={ticket.id} ticket={ticket} />)}
+      {tickets.map((ticket) => (
+        <TicketMovie key={ticket.id} ticket={ticket} />
+      ))}
     </div>
   )
-}
-
-export const QRCode = ({ url }: { url: string }) => {
-  const [picUrl, setPicUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    async function fetchImageUrl() {
-      setLoading(true)
-      const imageUrl = await getImageUrl(url)
-      setLoading(false)
-      setPicUrl(imageUrl)
-    }
-
-    fetchImageUrl()
-  }, [url])
-
-  if (loading) return <Loading />
-
-  return <Image width={200} height={200} src={picUrl || ''} alt={'ticket'} />
 }

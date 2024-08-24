@@ -40,7 +40,7 @@ export const CreateMovie = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, files } = e.target;
+    const { name, value,files } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
       [name]: files ? files[0] : value,
@@ -54,11 +54,11 @@ export const CreateMovie = () => {
     setError("");
 
     try {
-      if (form.posterUrl instanceof File) {
+      if (form.posterUrl && form.posterUrl.constructor === File) {
         setUploading(true);
 
         const storage = getStorage(app);
-        const storageRef = ref(storage, `images/${form.posterUrl.name}`);
+        const storageRef = ref(storage, `images/${form.posterUrl}`);
         await uploadBytes(storageRef, form.posterUrl);
         const downloadURL = await getDownloadURL(storageRef);
 
