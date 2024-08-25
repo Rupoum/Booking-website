@@ -49,7 +49,7 @@ export default function Logout() {
                 onMouseLeave={() => setDropdown(false)}
                 className="absolute right-0 bg-pink-300 top-6 rounded-md px-5 w-36"
               >
-                <ul>
+                
                   <Link href={'/profile'}>
                     <div className="py-1 hover:text-blue-700 text-sm">My profile</div>
                   </Link>
@@ -65,7 +65,7 @@ export default function Logout() {
                     
                   </div>
                   </Link>
-                </ul>
+                
               </div>
             )}
           </div>

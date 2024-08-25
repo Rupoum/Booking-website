@@ -180,7 +180,7 @@ const CurrentlyPlaying = () => {
       <Dialog open={!!selectedMovie} onOpenChange={closeModal}>
         <DialogContent>
           <DialogTitle>{selectedMovie?.title}</DialogTitle>
-          <Image
+          {/* <Image
             src={
               selectedMovie?.posterUrl?.startsWith("http")
                 ? selectedMovie?.posterUrl
@@ -190,7 +190,7 @@ const CurrentlyPlaying = () => {
             className="w-28 h-32 mb-4"
             width={112}
             height={128}
-          />
+          /> */}
           <DialogDescription>
             <p>Date: {selectedMovie?.date}</p>
             <p>Rating: {selectedMovie?.rating}</p>
