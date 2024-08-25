@@ -38,7 +38,6 @@ export const CreateShowtime = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/cinema/cinema');
         setScreens(response.data);
-      
       } catch (error) {
         console.error('Error fetching screens:', error);
         setError('Failed to fetch screens');
@@ -49,7 +48,7 @@ export const CreateShowtime = () => {
     fetchScreens();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, index?: number) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, index?: any) => {
     const { name, value } = e.target;
     if (index !== undefined) {
       const updatedShowtimes = [...form.showtimes];
@@ -129,7 +128,7 @@ export const CreateShowtime = () => {
           <option value="">Select a screen...</option>
           {screens.map((cinema: any) =>
             cinema.screens.map((screen: any) => (
-              <option key={cinema._id} value={cinema._id} >
+              <option key={cinema.screens.map((screen: { _id: any; }) => screen._id)} value={ cinema.screens.map((screen: { _id: any; }) => screen._id)} >
                 {cinema.name} - Screen{screen.screenno}
               </option>
             ))

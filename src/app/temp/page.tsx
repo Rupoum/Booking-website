@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { RecoilRoot } from "recoil";
-import { SelectMovie } from "../../components/templates/SelectMovie";
+import { SelectShowtimes } from "../../components/templates/SelectShows";
 // import ProtectedRoute from "@/components/atoms/protecting";
 import { withAuth } from "@/components/useauth";
 // import CreateCinemaPage from "@/components/temp/createc";
@@ -12,9 +12,9 @@ import { withAuth } from "@/components/useauth";
      
       </ProtectedRoute> */}
       <div className="flex justify-center items-center ">
-        <SelectMovie cinemaId={13213}>
+        <SelectShowtimes cinemaId={"66c6333e1aeb3f8cd7cd2581"} movieId={"66c9dc1e11670d15dd271190"} >
             
-        </SelectMovie>
+        </SelectShowtimes>
         {/* <CreateCinemaPage /> */}
       </div>
     </RecoilRoot>

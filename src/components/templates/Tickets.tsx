@@ -41,7 +41,7 @@ export const QRCode = ({ url }: { url: string }) => {
 export const TicketMovie = ({
   ticket,
 }: {
-  ticket: any // Replace 'any' with the correct type if available
+  ticket: any 
 }) => {
   const [open, setOpen] = useState(false)
 

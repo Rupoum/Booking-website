@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
-} from '../atoms/dialog'
+} from '../../atoms/dialog'
 
 interface SimpleDialogProps {
   open: boolean

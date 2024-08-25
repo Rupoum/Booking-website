@@ -11,7 +11,6 @@ export interface IShowtime {
     soundSystemType: string
   }
 }
-
 export interface IShowtimeSelectCardProps {
   showtime: IShowtime
   selected?: boolean
@@ -42,7 +41,7 @@ export const ShowtimeSelectCard = ({
 // For fetching data related to showtimes (if needed elsewhere)
 export const fetchShowtimes = async (cinemaId: number) => {
   try {
-    const response = await axios.get(`/api/showtimes/${cinemaId}`)
+    const response = await axios.get(`http://localhost:5000/api/screen/screen/cinema/${cinemaId}`)
     return response.data
   } catch (error) {
     console.error('Error fetching showtimes:', error)
