@@ -12,10 +12,14 @@ import { user } from "@nextui-org/theme";
 
 const Signup = () => {
   // State variables to handle form input, loading, and error states
-  const [formdata, setFormdata] = useState({ email: '', password: '', name: '' });
+  const [formdata, setFormdata] = useState({
+    email: "",
+    password: "",
+    name: "",
+  });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   const [auth, setAuth] = useRecoilState(authState);
   const router = useRouter();
 
@@ -28,28 +32,30 @@ const Signup = () => {
       email: formdata.email,
       password: formdata.password,
       // reason: "ds" // Include any additional parameters you need
-  };
+    };
 
     try {
-      const response = await axios.post("http://localhost:5000/api/customer/signup",signupData)
-      const USer=response.data.user;
+      const response = await axios.post(
+        "https://bookmyshowfinal.onrender.com/api/customer/signup",
+        signupData
+      );
+      const USer = response.data.user;
       if (response.status === 200) {
         setAuth({
-          isAuthenticated: true, 
+          isAuthenticated: true,
           user: response.data.user,
-          token:null,
-        //  role:USer.role
-        role:"a"
+          token: null,
+          //  role:USer.role
+          role: "a",
         });
         // Redirect to OTP verification pages
-        router.push('/otp');
-        localStorage.setItem('tempUserData', JSON.stringify(signupData));
-      
+        router.push("/otp");
+        localStorage.setItem("tempUserData", JSON.stringify(signupData));
       } else {
         setError(response.data.message || "Signup failed. Please try again.");
       }
       setError("Please try again later.");
-        console.error(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -73,13 +79,15 @@ const Signup = () => {
             className="bg-[#333] placeholder:text-xs text-white placeholder:text-gray-400 w-full inline-block"
             required
             disabled={loading}
-         />
+          />
           <Input
             type="email"
             name="email "
             placeholder="Email"
             value={formdata.email}
-            onChange={(e) => setFormdata({ ...formdata, email: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, email: e.target.value })
+            }
             required
             disabled={loading}
             className="bg-[#333] placeholder:text-xs text-white placeholder:text-gray-400 w-full inline-block"
@@ -89,19 +97,21 @@ const Signup = () => {
             name="password"
             placeholder="Password"
             value={formdata.password}
-            onChange={(e) => setFormdata({ ...formdata, password: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, password: e.target.value })
+            }
             className="bg-[#333] placeholder:text-xs text-white placeholder:text-gray-400 w-full inline-block"
             required
             disabled={loading}
           />
 
           <Button
-           type="submit"
+            type="submit"
             variant="destructive"
             className="bg-[#e50914] text-black w-full "
             disabled={loading}
-         >
- {loading ? "Signing up..." : "Sign Up"}
+          >
+            {loading ? "Signing up..." : "Sign Up"}
           </Button>
         </div>
         {error && <p className="text-red-500 mt-2">{error}</p>}

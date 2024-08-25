@@ -29,6 +29,8 @@ interface Movie {
 
 const CurrentlyPlaying = () => {
   // Sample movie data with image URLs
+
+  const [hoveredMovie, setHoveredMovie] = React.useState<any | null>(null);
   const movies: Movie[] = [
     {
       name: "Movie 1",
@@ -123,17 +125,13 @@ const CurrentlyPlaying = () => {
   return (
     <div className="m-10">
       <div className="flex justify-between">
-        <div>
-          <h2>Coming Soon</h2>
-        </div>
-        <div>
-          <Button variant="link" className="text-xs">
-            See more{" "}
-            <span className="ml-2">
-              <MoveRight />
-            </span>
-          </Button>
-        </div>
+        <h2>Currently Playing</h2>
+        <Button variant="link" className="text-xs">
+          See more{" "}
+          <span className="ml-2">
+            <MoveRight />
+          </span>
+        </Button>
       </div>
       <div className="mt-10 mx-14 flex flex-wrap justify-start">
         <Carousel
@@ -151,18 +149,27 @@ const CurrentlyPlaying = () => {
                 className="mx-2 sm:basis-auto md:basis-auto lg:basis-auto"
               >
                 <Card
-                  className="w-56 h-64 flex flex-col justify-between bg-cover bg-center cursor-pointer"
+                  className="relative w-56 h-64 flex flex-col justify-between bg-cover bg-center cursor-pointer"
                   style={{ backgroundImage: `url('${movie.imageUrl}')` }}
-                  onClick={() => openModal(movie)} // Open modal on click
+                  onClick={() => openModal(movie)}
+                  onMouseEnter={() => setHoveredMovie(movie)}
+                  onMouseLeave={() => setHoveredMovie(null)}
                 >
                   <div className="flex-grow"></div>
-                  <div className="px-5">
-                    <CardTitle className="text-white">{movie.name}</CardTitle>
-                    <CardDescription className="text-white">
-                      {movie.date} <br />
-                      <span>{movie.rating}</span>
-                    </CardDescription>
-                  </div>
+
+                  {hoveredMovie === movie && (
+                    <div className="absolute   inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                      <div className="mt-16">
+                        <CardTitle className="text-white">
+                          {movie.name}
+                        </CardTitle>
+                        <CardDescription className="text-white">
+                          {movie.date} <br />
+                          <span>{movie.rating}</span>
+                        </CardDescription>
+                      </div>
+                    </div>
+                  )}
                 </Card>
               </CarouselItem>
             ))}
@@ -170,14 +177,19 @@ const CurrentlyPlaying = () => {
         </Carousel>
       </div>
 
-      {/* Modal for displaying movie details */}
       <Dialog open={!!selectedMovie} onOpenChange={closeModal}>
         <DialogContent>
-          <DialogTitle>{selectedMovie?.name}</DialogTitle>
-          <img
-            src={selectedMovie?.imageUrl}
-            alt={selectedMovie?.name}
+          <DialogTitle>{selectedMovie?.title}</DialogTitle>
+          <Image
+            src={
+              selectedMovie?.posterUrl?.startsWith("http")
+                ? selectedMovie?.posterUrl
+                : "/film.png"
+            }
+            alt={selectedMovie?.title}
             className="w-28 h-32 mb-4"
+            width={112}
+            height={128}
           />
           <DialogDescription>
             <p>Date: {selectedMovie?.date}</p>

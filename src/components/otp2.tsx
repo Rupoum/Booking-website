@@ -6,25 +6,25 @@ import { Button } from "../components/ui/button";
 import { useRecoilState } from "recoil";
 import { authState } from "./atoms/atomauth";
 import { Input } from "../components/ui/input";
-import {jwtDecode} from "jwt-decode"; // Correct import
+import { jwtDecode } from "jwt-decode"; // Correct import
 
 const OTPPage = () => {
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const[user,setuser]=useState({value:null});
+  const [error, setError] = useState("");
+  const [user, setuser] = useState({ value: null });
   const [auth, setAuth] = useRecoilState(authState);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const tempUserData = localStorage.getItem('tempUserData');
+      const tempUserData = localStorage.getItem("tempUserData");
       if (!tempUserData) {
-        throw new Error('No user data found in localStorage.');
+        throw new Error("No user data found in localStorage.");
       }
 
       const parsedData = JSON.parse(tempUserData);
@@ -32,16 +32,19 @@ const OTPPage = () => {
 
       // Validate that required fields are present
       if (!name || !email || !password) {
-        throw new Error('Incomplete user data.');
+        throw new Error("Incomplete user data.");
       }
       localStorage.clear();
       // Make the API call for OTP verification
-      const response = await axios.post('http://localhost:5000/api/customer/verifyotp', {
-        code: otp,
-        name,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://bookmyshowfinal.onrender.com/api/customer/verifyotp",
+        {
+          code: otp,
+          name,
+          email,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         const { token, user } = response.data;
@@ -53,14 +56,20 @@ const OTPPage = () => {
           user: response.data.user,
           token: token,
         });
-        localStorage.setItem('authtoken', token);
-        console.log(user.role)
-        router.push('/');
+        localStorage.setItem("authtoken", token);
+        console.log(user.role);
+        router.push("/");
       } else {
-        setError(response.data.message || 'OTP verification failed. Please try again.');
+        setError(
+          response.data.message || "OTP verification failed. Please try again."
+        );
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred. Please try again.');
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred. Please try again."
+      );
       console.error(error);
     } finally {
       setLoading(false);
@@ -71,7 +80,9 @@ const OTPPage = () => {
     <div className="mt-24 rounded-xl bg-black/80 py-10 px-6 md:mt-0 md:max-w-sm md:px-14">
       <form onSubmit={handleSubmit}>
         <div className="flex justify-center">
-          <h1 className="text-3xl font-semibold text-white">OTP Verification</h1>
+          <h1 className="text-3xl font-semibold text-white">
+            OTP Verification
+          </h1>
         </div>
         <div className="space-y-4 mt-5">
           <Input
