@@ -5,6 +5,7 @@ import Header2 from "@/components/Home/Header2";
 import MainHeader from "@/components/Home/MainHeader";
 import { SwipeCarousel } from "@/components/Home/SwipeCarousel";
 import Navbar from "@/components/Home/Navbar";
+import Footer from "@/components/Home/Footer";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <CurrentlyPlaying />
 
       <ComingSoon />
+      <Footer />
     </div>
   );
 }

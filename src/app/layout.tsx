@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import Navbar from "@/components/Home/Navbar";
-import Footer from "@/components/Home/Footer";
+
 import { Toaster } from "@/components/ui/toaster";
 
 // import Logout from "../components/Logoutbtn";
@@ -36,7 +35,6 @@ export default function RootLayout({
           {/* <Navbar /> */}
           {children}
           <Toaster />
-          <Footer />
         </ThemeProvider>
       </body>
     </html>

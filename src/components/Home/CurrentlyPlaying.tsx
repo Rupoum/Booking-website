@@ -17,8 +17,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import axios from "axios";
-import Image from "next/image";
 import { motion } from "framer-motion"; // Import motion from framer-motion
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface IListMoviesProps {}
 
@@ -56,10 +56,6 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
     setSelectedMovie(null);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="m-10">
       <div className="flex justify-between">
@@ -81,50 +77,60 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
           <CarouselPrevious />
           <CarouselNext />
           <CarouselContent className="-ml-1">
-            {movies.map((movie, index) => (
-              <CarouselItem
-                key={index}
-                className="mx-2 sm:basis-auto md:basis-auto lg:basis-auto"
-              >
-                <Card
-                  className="relative w-56 h-64 flex flex-col justify-between bg-cover bg-center cursor-pointer"
-                  style={{ backgroundImage: `url('${movie.posterUrl}')` }}
-                  onClick={() => openModal(movie)}
-                  onMouseEnter={() => setHoveredMovie(movie)}
-                  onMouseLeave={() => setHoveredMovie(null)}
-                >
-                  <div className="flex-grow"></div>
-
-                  {hoveredMovie === movie && (
-                    <motion.div
-                      className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-                      initial={{ opacity: 0, y: 20 }} // Start slightly below
-                      animate={{ opacity: 1, y: 0 }} // Slide up to original position
-                      exit={{ opacity: 0, y: 20 }} // Slide back down
-                      transition={{ duration: 0.3 }} // Animation duration
+            {loading
+              ? // Show loading skeletons for each card while loading
+                Array.from({ length: 5 }).map((_, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="mx-2 sm:basis-auto md:basis-auto lg:basis-auto"
+                  >
+                    <Skeleton className="h-64 w-56 rounded-xl" />
+                  </CarouselItem>
+                ))
+              : movies.map((movie, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="mx-2 sm:basis-auto md:basis-auto lg:basis-auto"
+                  >
+                    <Card
+                      className="relative w-56 h-64 flex flex-col justify-between bg-cover bg-center cursor-pointer"
+                      style={{ backgroundImage: `url('${movie.posterUrl}')` }}
+                      onClick={() => openModal(movie)}
+                      onMouseEnter={() => setHoveredMovie(movie)}
+                      onMouseLeave={() => setHoveredMovie(null)}
                     >
-                      <div className="text-center">
-                        <CardTitle className="text-white">
-                          {movie.title}
-                        </CardTitle>
-                        <CardDescription className="text-white">
-                          {movie.genre} <br />
-                          <span>{movie.releaseDate}</span>
-                        </CardDescription>
-                      </div>
-                    </motion.div>
-                  )}
-                </Card>
-                <div className="sm:hidden block mt-5">
-                  <h2 className="text-xl">
-                    {movie.title} <br />{" "}
-                    <span className="text-gray-400 text-xs">
-                      {movie.releaseDate}
-                    </span>
-                  </h2>
-                </div>
-              </CarouselItem>
-            ))}
+                      <div className="flex-grow"></div>
+
+                      {hoveredMovie === movie && (
+                        <motion.div
+                          className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+                          initial={{ opacity: 0, y: 20 }} // Start slightly below
+                          animate={{ opacity: 1, y: 0 }} // Slide up to original position
+                          exit={{ opacity: 0, y: 20 }} // Slide back down
+                          transition={{ duration: 0.3 }} // Animation duration
+                        >
+                          <div className="text-center">
+                            <CardTitle className="text-white">
+                              {movie.title}
+                            </CardTitle>
+                            <CardDescription className="text-white">
+                              {movie.genre} <br />
+                              <span>{movie.releaseDate}</span>
+                            </CardDescription>
+                          </div>
+                        </motion.div>
+                      )}
+                    </Card>
+                    <div className="sm:hidden block mt-5">
+                      <h2 className="text-xl">
+                        {movie.title} <br />{" "}
+                        <span className="text-gray-400 text-xs">
+                          {movie.releaseDate}
+                        </span>
+                      </h2>
+                    </div>
+                  </CarouselItem>
+                ))}
           </CarouselContent>
         </Carousel>
       </div>
@@ -153,7 +159,7 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
                   <p>Director: {selectedMovie?.director}</p>
                 </DialogDescription>
               </div>
-              <div className="ml-10">other thiungs</div>
+              <div className="ml-10">other things</div>
             </div>
             <Button
               onClick={closeModal}
