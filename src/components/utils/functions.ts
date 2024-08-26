@@ -20,6 +20,7 @@ export const formatDate = (dateString: string) => {
 
 // Define a type for a seat, with properties for row and column numbers
 export type PartialSeat = {
+  booked(booked: any): boolean | undefined
   id: number
   row: number
   column: number

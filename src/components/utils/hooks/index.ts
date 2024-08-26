@@ -9,7 +9,11 @@ import axios from 'axios'
 
 // import { trpcClient } from '@/trpc/clients/client'
 // import { RouterOutputs } from '@/trpc/clients/types'
-
+interface Cinema {
+  id: string;
+  name: string;
+  // Add other properties that the cinema object might have
+}
 export const useDialogState = (defaultState = false) => {
   const [open, setOpen] = useState(defaultState)
   
@@ -188,13 +192,13 @@ export const useHandleSearch = () => {
  */
 
 export function useGetCinema({ cinemaId }: { cinemaId: string | null }) {
-  const [cinema, setCinema] = useState(null);
+  const [cinema, setCinema] = useState<Cinema | null>(null);
 
   useEffect(() => {
     if (cinemaId) {
       const fetchCinema = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/cinema/cinema/${cinemaId}`);
+          const response = await axios.get<Cinema>(`http://localhost:5000/cinema/cinema/${cinemaId}`);
           setCinema(response.data);
         } catch (error) {
           console.error('Error fetching cinema:', error);
@@ -204,8 +208,6 @@ export function useGetCinema({ cinemaId }: { cinemaId: string | null }) {
       fetchCinema();
     }
   }, [cinemaId]);
-
-  console.log('cinema ', cinema);
 
   return { cinema };
 }

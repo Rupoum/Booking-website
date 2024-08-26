@@ -19,7 +19,7 @@ export const SeatBooking = () => {
       setUserId(decodedToken.userId); // Assuming the token contains a 'userId' field
     } else {
       console.error("User not authenticated");
-      // router.push("/login"); // Redirect to login if the token is not available
+      router.push("/login"); // Redirect to login if the token is not available
     }
   }, [router]);
 
@@ -104,4 +104,4 @@ export const SeatBooking = () => {
   );
 };
 
-// export default SeatBooking;
+export default SeatBooking;

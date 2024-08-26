@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SquareElem2 from "@/components/booking/SquareElem2";
 import { Skeleton } from "@/components/ui/skeleton";
 import { loadStripe } from "@stripe/stripe-js";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; // Corrected the import statement
 import StraightScreen2 from "./StraightScreen2";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+
 export const CinemaBooking = () => {
   const [rows, setRows] = useState<number>(0);
   const [columns, setColumns] = useState<number>(0);
@@ -26,7 +27,6 @@ export const CinemaBooking = () => {
   const [selectedSeats, setSelectedSeats] = useState<
     { row: number; column: number }[]
   >([]);
-  // const [hoverPrice, setHoverPrice] = useState<number>(0);
 
   useEffect(() => {
     const fetchSeatDetails = async () => {
@@ -81,36 +81,30 @@ export const CinemaBooking = () => {
 
   const handleCheckout = async () => {
     try {
-      // Retrieve the token from localStorage
       const token = localStorage.getItem("authtoken");
 
       if (!token) {
         throw new Error("Token not found");
       }
 
-      // Decode the JWT token to get the user ID
       const decodedToken: any = jwtDecode(token);
       const userId = decodedToken.id;
 
-      // Load Stripe
       const stripe = await loadStripe(
         process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
       );
 
-      // Make a POST request to your backend to create the Stripe session
       const response = await axios.post(
         "http://localhost:5000/api/screen/payment",
         {
-          userId: userId, // Use userId from decoded token
-          seats: selectedSeats, // Array of selected seats
-          price: calculateTotalPrice(), // Total price calculation function
+          userId: userId,
+          seats: selectedSeats,
+          price: calculateTotalPrice(),
         }
       );
 
-      // Extract sessionId from response
       const { sessionId } = response.data;
 
-      // Redirect to Stripe's checkout page
       const result = await stripe?.redirectToCheckout({ sessionId });
       if (result?.error) {
         console.error("Stripe Checkout error:", result.error.message);

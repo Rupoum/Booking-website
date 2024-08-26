@@ -84,7 +84,7 @@ export const TicketMovie = ({
           <div className="mt-4">
             <div>Seats</div>
             <div className="flex flex-wrap gap-2">
-              {ticket.Bookings.map((booking) => (
+              {ticket.Bookings.map((booking:any) => (
                 <div
                   key={booking.id}
                   className="px-1 text-sm bg-white border rounded"
