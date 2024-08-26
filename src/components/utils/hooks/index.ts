@@ -5,6 +5,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '../config/firebase'
 import { catchError, debounceTime, EMPTY, Subject, tap } from 'rxjs'
 import firebase from "firebase/compat/app"
+import axios from 'axios'
 
 // import { trpcClient } from '@/trpc/clients/client'
 // import { RouterOutputs } from '@/trpc/clients/types'
@@ -185,23 +186,29 @@ export const useHandleSearch = () => {
 /**
  * Get current cinema
  */
-// fetch the search method from it
-// export function useGetCinema({ cinemaId }: { cinemaId: string | null }) {
-// //   // const { data, refetch } = trpcClient.cinemas.cinema.useQuery(
-// //   //   { cinemaId: +(cinemaId || '') },
-// //   //   { enabled: false },
-// //   // )
 
-// //   useEffect(() => {
-// //     if (cinemaId) {
-// //       refetch()
-// //     }
-// //   }, [refetch, cinemaId])
+export function useGetCinema({ cinemaId }: { cinemaId: string | null }) {
+  const [cinema, setCinema] = useState(null);
 
-// //   console.log('data ', data)
+  useEffect(() => {
+    if (cinemaId) {
+      const fetchCinema = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5000/cinema/cinema/${cinemaId}`);
+          setCinema(response.data);
+        } catch (error) {
+          console.error('Error fetching cinema:', error);
+        }
+      };
 
-// //   return { cinema: data }
-// // }
+      fetchCinema();
+    }
+  }, [cinemaId]);
+
+  console.log('cinema ', cinema);
+
+  return { cinema };
+}
 type SeatRowcolumn = {
   row: number;
   column: number;

@@ -2,13 +2,13 @@
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
-import { StripeItemType } from '@/util/types';
-import { generateSeatComment, groupSeatsByRow } from '@/util/functions';
-import { Button } from '../../atoms/button';
-import { Loading } from '../../molecules/Loading';
-import { useSeatSelection } from '@/util/hooks';
-import { Square, StaightMovieScreen } from '../ScreenUtils';
+import { generateSeatComment, groupSeatsByRow } from '@/components/utils/functions';
+import { Button } from '../atoms/button';
+import { Loading } from '../molecules/Loading';
+import { useSeatSelection } from '@/components/utils/hooks';
+import { Square, StaightMovieScreen } from './ScreenUtils';
 import { SeatNumber } from './SeatNumber';
+import jwt_decode from 'jwt-decode';
 
 export interface ISelectSeatsProps {
   showtimeId: number;
@@ -19,12 +19,11 @@ export const SelectSeats = ({
   showtimeId,
   screenId,
 }: ISelectSeatsProps) => {
-  const [data, setData] = useState<any>(null); // Define a proper type
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Fetch user ID from your authentication API
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -42,7 +41,7 @@ export const SelectSeats = ({
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const response = await axios.get(`/api/showtimes/${showtimeId}/seats`);
+        const response = await axios.get(`http://localhost:5000/api/screen/screen/cinema/${showtimeId}/seats`);
         setData(response.data);
       } catch (error) {
         setError('Failed to fetch seats');
@@ -70,7 +69,7 @@ export const SelectSeats = ({
     }));
 
     try {
-      const response = await axios.post('/api/stripe/create-session', {
+      const response = await axios.post('http://localhost:5000/api/screen/payment', {
         screenId,
         seats,
         showtimeId,
@@ -127,7 +126,7 @@ export const SelectSeats = ({
       </div>
       <div className="py-4">
         <div className="text-lg font-light">
-          {generateSeatComment({ allSeats: rows, selectedSeats })}
+          {/* {generateSeatComment({ allSeats: rows, selectedSeats: })} */}
         </div>
         {selectedSeats.length ? (
           <div className="my-4">
@@ -149,9 +148,7 @@ export const SelectSeats = ({
           Reset
         </Button>
         {selectedSeats.length ? (
-          <Button
-            onClick={handleCreateBooking}
-          >
+          <Button onClick={handleCreateBooking}>
             Create booking
           </Button>
         ) : null}

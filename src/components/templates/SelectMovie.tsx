@@ -45,7 +45,7 @@ export const SelectMovie = ({ cinemaId }: { cinemaId: String }) => {
             onClick={() => {
               deleteParam('showtimeId')
               deleteParam('screenId')
-              addParam('movieId', movie.id)
+              addParam('movieId', movie.Id)
             }}
           >
      <CinemaSelectCard
