@@ -1,4 +1,3 @@
-
 import React from "react";
 
 const Date = () => {
@@ -13,7 +12,7 @@ const Date = () => {
   ];
 
   return (
-    <div className="w-full h-14 bg-slate-100 flex items-center">
+    <div className="w-full h-16 bg-slate-100 flex items-center ">
       <div className="flex items-start gap-2 mx-8 ">
         {times.map((time, index) => (
           <div
