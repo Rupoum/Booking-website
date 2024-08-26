@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 import { motion } from "framer-motion"; // Import motion from framer-motion
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 export interface IListMoviesProps {}
 
@@ -26,6 +27,7 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
+  const router = useRouter();
   const [movies, setMovies] = React.useState<any[]>([]);
   const [selectedMovie, setSelectedMovie] = React.useState<any | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -53,7 +55,19 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
   };
 
   const closeModal = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete('movieId');
+    window.history.pushState({}, '', `${window.location.pathname}/cinema-details/${params.toString()}`);
     setSelectedMovie(null);
+  };
+
+  const handleBookTickets = () => {
+    if (selectedMovie) {
+      const params = new URLSearchParams(window.location.search);
+      // params.set('movieId', selectedMovie._id);
+      router.push( `/cinema-details/${selectedMovie._id}`);
+      // Additional logic to navigate or handle booking can be added here
+    }
   };
 
   return (
@@ -162,7 +176,7 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
               <div className="ml-10">other things</div>
             </div>
             <Button
-              onClick={closeModal}
+              onClick={handleBookTickets}
               variant="destructive"
               className="mt-4 "
             >
