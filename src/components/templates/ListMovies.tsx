@@ -1,8 +1,8 @@
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface IListMoviesProps {}
 
@@ -13,10 +13,12 @@ export const ListMovies = ({}: IListMoviesProps) => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/movie/movie');
+        const response = await axios.get(
+          "https://bookmyshowfinal.onrender.com/api/movie/movie"
+        );
         setMovies(response.data);
       } catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error("Error fetching movies:", error);
       } finally {
         setLoading(false);
       }
@@ -33,7 +35,7 @@ export const ListMovies = ({}: IListMoviesProps) => {
     <div>
       <div className="flex justify-end">
         <Link
-          href={'/admin/movies/new'}
+          href={"/admin/movies/new"}
           className="flex items-center gap-2 my-2"
         >
           {/* <Plus /> Create movie */}
@@ -46,22 +48,18 @@ export const ListMovies = ({}: IListMoviesProps) => {
         ))}
       </div>
     </div>
-  )
-}
-export const MovieInfo = ({
-  movie,
-}: {
-  movie: any
-}) => {
-  const imageUrl = movie.posterUrl?.startsWith('http')
+  );
+};
+export const MovieInfo = ({ movie }: { movie: any }) => {
+  const imageUrl = movie.posterUrl?.startsWith("http")
     ? movie.posterUrl
-    : '/film.png'; // Fallback to a default image if the URL is invalid
+    : "/film.png"; // Fallback to a default image if the URL is invalid
 
   return (
     <div>
       <Image
         src={imageUrl}
-        alt={movie.title || 'Movie Poster'}
+        alt={movie.title || "Movie Poster"}
         className="aspect-square object-cover rounded shadow-lg"
         width={300}
         height={300}
@@ -70,6 +68,5 @@ export const MovieInfo = ({
       <div>{movie.director}</div>
       <div className="text-xs text-gray-500 mt-2">{movie.genre}</div>
     </div>
-  )
-}
-
+  );
+};

@@ -1,27 +1,29 @@
-'use client'
-import Image from 'next/image'
-import { Title2 } from '../atoms/typography'
-import { format } from 'date-fns'
-import { AlertBox } from '../molecules/AlertBox'
-import { formatDate } from '@/components/utils/functions'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+"use client";
+import Image from "next/image";
+import { Title2 } from "../atoms/typography";
+import { format } from "date-fns";
+import { AlertBox } from "../molecules/AlertBox";
+import { formatDate } from "@/components/utils/functions";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export interface IListMoviesProps {
-  cinemas: any[]
+  cinemas: any[];
 }
 
 export const ListCinemas = () => {
-  const [cinemas, setCinemas] = useState<IListMoviesProps['cinemas']>([]);
+  const [cinemas, setCinemas] = useState<IListMoviesProps["cinemas"]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCinemas = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/cinema/cinema');
+        const response = await axios.get(
+          "https://bookmyshowfinal.onrender.com/api/cinema/cinema"
+        );
         setCinemas(response.data);
       } catch (error) {
-        console.error('Error fetching cinemas:', error);
+        console.error("Error fetching cinemas:", error);
       } finally {
         setLoading(false);
       }
@@ -49,13 +51,9 @@ export const ListCinemas = () => {
       </div>
     </div>
   );
-}
+};
 
-export const CinemaInfo = ({
-  cinema,
-}: {
-  cinema: any
-}) => {
+export const CinemaInfo = ({ cinema }: { cinema: any }) => {
   return (
     <div>
       <div className="text-2xl font-semibold">{cinema.name}</div>
@@ -82,8 +80,7 @@ export const CinemaInfo = ({
       </div>
     </div>
   );
-}
-
+};
 
 export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
   const [showtimes, setShowtimes] = useState<any[]>([]);
@@ -92,10 +89,12 @@ export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
   useEffect(() => {
     const fetchShowtimes = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/screen/screen/${screenId}`);
+        const response = await axios.get(
+          `http://localhost:5000/api/screen/screen/${screenId}`
+        );
         setShowtimes(response.data);
       } catch (error) {
-        console.error('Error fetching showtimes:', error);
+        console.error("Error fetching showtimes:", error);
       } finally {
         setLoading(false);
       }
@@ -119,18 +118,18 @@ export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
             .sort(
               (a, b) =>
                 new Date(a.startTime).getTime() -
-                new Date(b.startTime).getTime(),
+                new Date(b.startTime).getTime()
             )
             .map((showtime) => (
               <div className="p-3 border rounded" key={showtime.id}>
                 <div className="font-semibold text-2xl">
-                  {format(showtime.startTime.toString(), 'p')}
+                  {format(showtime.startTime.toString(), "p")}
                 </div>
                 <div className="text-gray-600 text-xs mb-2">
-                  {format(showtime.startTime.toString(), 'PP')}
+                  {format(showtime.startTime.toString(), "PP")}
                 </div>
                 <Image
-                  src={showtime.Movie.posterUrl || '/film.png'}
+                  src={showtime.Movie.posterUrl || "/film.png"}
                   alt=""
                   className="rounded-lg"
                   width={300}
@@ -143,4 +142,4 @@ export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
       </div>
     </div>
   ));
-}
+};

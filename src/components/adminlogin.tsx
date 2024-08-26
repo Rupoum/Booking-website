@@ -9,9 +9,9 @@ import { useRecoilState } from "recoil";
 import { authState } from "./atoms/atomauth";
 
 const Login = () => {
-  const [formdata, setFormdata] = useState({ email: '', password: '' });
+  const [formdata, setFormdata] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const [auth, setAuth] = useRecoilState(authState);
   const router = useRouter();
@@ -24,20 +24,23 @@ const Login = () => {
     const login = { email: formdata.email, password: formdata.password };
 
     try {
-      const response = await axios.post("http://localhost:5000/api/admin/login", login);
+      const response = await axios.post(
+        "https://bookmyshowfinal.onrender.com/api/admin/login",
+        login
+      );
 
       if (response.status === 200) {
         const { token, user } = response.data;
-            //  console.log(token,user);
+        //  console.log(token,user);
         setAuth({
           isAuthenticated: true,
           user,
           token,
-          role:"sd"
+          role: "sd",
         });
-        localStorage.setItem('authtoken', token);
-      console.log(user.role);
-        router.push('/');
+        localStorage.setItem("authtoken", token);
+        console.log(user.role);
+        router.push("/admin/");
       } else {
         setError(response.data.message || "Login failed");
       }
@@ -63,7 +66,9 @@ const Login = () => {
             name="email"
             placeholder="Email"
             value={formdata.email}
-            onChange={(e) => setFormdata({ ...formdata, email: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, email: e.target.value })
+            }
             required
             disabled={loading}
             className="bg-[#333] placeholder:text-xs text-white placeholder:text-gray-400 w-full inline-block"
@@ -73,7 +78,9 @@ const Login = () => {
             name="password"
             placeholder="Password"
             value={formdata.password}
-            onChange={(e) => setFormdata({ ...formdata, password: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, password: e.target.value })
+            }
             className="bg-[#333] placeholder:text-xs text-white placeholder:text-gray-400 w-full inline-block"
             required
             disabled={loading}
