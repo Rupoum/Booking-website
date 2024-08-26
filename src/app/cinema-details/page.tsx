@@ -1,10 +1,13 @@
-import CinemaDetails from '@/components/CinemaDetails/CinemaDetails'
-import React from 'react'
-import {CinemaBooking} from "@/components/templates/temp"
+import CinemaDetails from "@/components/CinemaDetails/CinemaDetails";
+import React from "react";
+// import { CinemaBooking } from "../../components/booking/CinemaBooking";
+import MovieDetails from "@/components/booking/MovieDetails";
 const page = () => {
   return (
-    <div><CinemaBooking/></div>
-  )
-}
+    <div>
+      <CinemaDetails />
+    </div>
+  );
+};
 
-export default page
+export default page;
