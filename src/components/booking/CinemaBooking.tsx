@@ -1,14 +1,30 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import SquareElem2 from "./SquareElem2";
 
-export const CinemaBooking = ({
-  rows,
-  columns,
-}: {
-  rows: number;
-  columns: number;
-}) => {
+export const CinemaBooking = () => {
+  const [rows, setRows] = useState<number>(0);
+  const [columns, setColumns] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchSeatDetails = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/screen/screen/cinema/66cb841556fe12d3cd890a9a/seat"
+        );
+
+        const { rows, columns } = response.data;
+        setRows(rows);
+        setColumns(columns);
+      } catch (error) {
+        console.error("Error fetching seat details:", error);
+      }
+    };
+
+    fetchSeatDetails();
+  }, []);
+
   const renderRows = () => {
     const rowElements: JSX.Element[] = [];
 

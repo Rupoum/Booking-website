@@ -8,7 +8,7 @@ const page = () => {
     <div className="mt-14">
       <Date />
       <div className="flex flex-col justify-center items-center my-20">
-        <CinemaBooking rows={10} columns={20} />
+        <CinemaBooking  />
         <div className="mt-10">
           <StraightScreen2 />
         </div>
