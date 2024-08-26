@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { RecoilRoot } from "recoil";
-import { ListMovies } from "../../../components/templates/ListMovies";
+import { ListMovies } from "../../../../components/templates/ListMovies";
 // import ProtectedRoute from "@/components/atoms/protecting";
 import { withAuth } from "@/components/useauth";
 // import CreateCinemaPage from "@/components/temp/createc";

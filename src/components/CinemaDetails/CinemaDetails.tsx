@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Datecard } from "@/components/booking/Datecard";
+import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 
 type Showtime = {
   time: string;
@@ -9,35 +10,61 @@ type Showtime = {
 };
 
 type CinemaDetailsType = {
-  name: string;
-  Address: string;
-  moviename:string,
+  name: string | null;
+  Address: string | null;
+  moviename: string | null;
   time: Showtime[];
 };
 
 const CinemaDetails = () => {
-  const [cinemaDetails, setCinemaDetails] = useState<CinemaDetailsType | null>(null);
+  const [cinemaDetails, setCinemaDetails] = useState<CinemaDetailsType | null>(
+    null
+  );
   const [times, setTimes] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true); // State to manage loading
 
   const movieId = "66c9d7da11670d15dd271184"; // Replace with the actual movie ID
 
   useEffect(() => {
     // Fetch cinema details and showtimes
     axios
-      .get<CinemaDetailsType>(`http://localhost:5000/api/movie/movie/cinema/${movieId}`)
+      .get<CinemaDetailsType>(
+        `https://bookmyshowfinal.onrender.com/api/movie/movie/cinema/${movieId}`
+      )
       .then((response) => {
         const data = response.data;
         setCinemaDetails(data);
-        setTimes(data.time.map((t) => new Date(t.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })));
+        setTimes(
+          data.time.map((t) =>
+            new Date(t.time).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          )
+        );
       })
       .catch((error) => {
         console.error("Error fetching cinema details:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after fetching
       });
   }, [movieId]);
 
-  if (!cinemaDetails) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      // <div className="mt-20 border-2 border-gray-300">
+      //   <Skeleton className="h-32 w-full" />{" "}
+      //   {/* Skeleton for movie title section */}
+      //   <Skeleton className="h-20 w-full" />{" "}
+      //   {/* Skeleton for date card section */}
+      //   <Skeleton className="h-[40rem] w-full" />{" "}
+      //   {/* Skeleton for showtimes section */}
+      // </div>
+      <>Loading</>
+    );
   }
+
   return (
     <div className="mt-20 border-2 border-gray-300">
       <div className="w-full h-32 flex flex-col justify-center bg-gray-100">

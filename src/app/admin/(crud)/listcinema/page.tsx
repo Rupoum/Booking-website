@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { RecoilRoot } from "recoil";
-import { CreateCinema } from "../../../components/templates/CreateCinema";
+import { ListCinemas } from "../../../../components/templates/ListCinemas";
 // import ProtectedRoute from "@/components/atoms/protecting";
 import { withAuth } from "@/components/useauth";
 // import CreateCinemaPage from "@/components/temp/createc";
@@ -12,10 +12,10 @@ function Cinema() {
      
       </ProtectedRoute> */}
       <div className="flex justify-center items-center ">
-        <CreateCinema />
+        <ListCinemas />
         {/* <CreateCinemaPage /> */}
       </div>
     </RecoilRoot>
   );
 }
-export default Cinema;
+export default withAuth(Cinema, "Admin");

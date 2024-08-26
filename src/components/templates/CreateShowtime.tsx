@@ -1,12 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useToast } from "../molecules/Toaster/use-toast";
+import { useToast } from "../molecules/Toaster/use-toast"; // Ensure this is correctly set up
 import { Button } from "../atoms/button";
 import { Label } from "../atoms/label";
 import { Input } from "../atoms/input";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 
 export const CreateShowtime = () => {
   const [form, setForm] = useState({
@@ -19,7 +21,6 @@ export const CreateShowtime = () => {
   const [screens, setScreens] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +30,6 @@ export const CreateShowtime = () => {
           "https://bookmyshowfinal.onrender.com/api/movie/movie"
         );
         setMovies(response.data);
-        // console.log(response.data);
       } catch (error) {
         console.error("Error fetching movies:", error);
         setError("Failed to fetch movies");
@@ -100,19 +100,19 @@ export const CreateShowtime = () => {
           },
         }
       );
-      toast({ title: "Showtimes created successfully." });
+      toast.success("Showtimes created successfully."); // Use toast.success for success messages
       setForm({ showtimes: [{ time: "" }], screenId: "", movieId: "" });
       router.replace("/admin/listmovie");
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to create showtimes");
-      toast({ title: error.message, variant: "destructive" });
+      toast.error(error.message || "Failed to create showtimes"); // Use toast.error for error messages
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center  items-center mt-40">
+    <div className="flex justify-center items-center mt-40">
       <form onSubmit={handleSubmit}>
         <Label title="Movie">
           <select
@@ -123,7 +123,7 @@ export const CreateShowtime = () => {
           >
             <option value="">Select a movie...</option>
             {movies.map((movie: any) => (
-              <option key={movie._id} value={movie._id} ref={movie}>
+              <option key={movie._id} value={movie._id}>
                 {movie.title}
               </option>
             ))}
@@ -140,13 +140,8 @@ export const CreateShowtime = () => {
             <option value="">Select a screen...</option>
             {screens.map((cinema: any) =>
               cinema.screens.map((screen: any) => (
-                <option
-                  key={cinema.screens.map((screen: { _id: any }) => screen._id)}
-                  value={cinema.screens.map(
-                    (screen: { _id: any }) => screen._id
-                  )}
-                >
-                  {cinema.name} - Screen{screen.screenno}
+                <option key={screen._id} value={screen._id}>
+                  {cinema.name} - Screen {screen.screenno}
                 </option>
               ))
             )}
@@ -189,6 +184,16 @@ export const CreateShowtime = () => {
         </Button>
         {error && <p className="text-red-600">{error}</p>}
       </form>
+      <ToastContainer // Add ToastContainer here
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
