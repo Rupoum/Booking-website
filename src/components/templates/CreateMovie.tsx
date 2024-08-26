@@ -1,8 +1,5 @@
-"use client";
-
 import React, { useState } from "react";
 import axios from "axios";
-import { useToast } from "../molecules/Toaster/use-toast";
 import { Label } from "../atoms/label";
 import { Input } from "../atoms/input";
 import { HtmlSelect } from "../atoms/select";
@@ -10,8 +7,9 @@ import { Button } from "../atoms/button";
 import { useRouter } from "next/navigation";
 import { app } from "@/components/utils/config/firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { any } from "zod";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css";
 
 enum Genre {
   Action = "Action",
@@ -35,7 +33,6 @@ export const CreateMovie = () => {
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [imageURL, setImageURL] = useState("");
-  const { toast } = useToast();
   const router = useRouter();
 
   const handleChange = (
@@ -59,7 +56,7 @@ export const CreateMovie = () => {
         setUploading(true);
 
         const storage = getStorage(app);
-        const storageRef = ref(storage, `images/${form.posterUrl}`);
+        const storageRef = ref(storage, `images/${form.posterUrl.name}`); // Use form.posterUrl.name
         await uploadBytes(storageRef, form.posterUrl);
         const downloadURL = await getDownloadURL(storageRef);
 
@@ -81,7 +78,7 @@ export const CreateMovie = () => {
         }
       );
 
-      toast({ title: "Movie created successfully." });
+      toast.success("Movie created successfully."); // Use toast.success for success messages
 
       setForm({
         title: "",
@@ -95,7 +92,7 @@ export const CreateMovie = () => {
       router.replace("/admin/movies");
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to create movie");
-      toast({ title: error.message, variant: "destructive" });
+      toast.error(error.message || "Failed to create movie"); // Use toast.error for error messages
     } finally {
       setLoading(false);
       setUploading(false);
@@ -105,9 +102,9 @@ export const CreateMovie = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="my-20 flex justify-center flex-col sm:w-full gap-32 items-center">
+        <div className="mt-5 flex justify-center flex-col sm:w-full gap-6 items-center">
           <div>
-            <h1 className="my-10 text-4xl font-bold">Create Movie</h1>
+            <h1 className="mb-5 text-4xl font-bold">Create Movie</h1>
             <Label title="Title" error={error}>
               <Input
                 placeholder="Title"
@@ -175,11 +172,22 @@ export const CreateMovie = () => {
             )}
           </Label>
         </div>
-        <Button loading={loading || uploading} type="submit">
-          Submit
-        </Button>
-        {error && <p className="text-red-600">{error}</p>}
+        <div className="flex justify-center items-center ">
+          <Button loading={loading || uploading} type="submit">
+            Submit
+          </Button>
+        </div>
       </form>
+      <ToastContainer // Add ToastContainer here
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
