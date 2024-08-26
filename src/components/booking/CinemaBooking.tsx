@@ -13,6 +13,8 @@ export const CinemaBooking = () => {
     { row: number; column: number }[]
   >([]); // State to track selected seats
   const [hoverPrice, setHoverPrice] = useState<number>(0); // State to track price on hover
+  const [projectionType, setProjectionType] = useState<string>(""); // State for projection type
+  const [soundType, setSoundType] = useState<string>(""); // State for sound type
 
   useEffect(() => {
     const fetchSeatDetails = async () => {
@@ -21,10 +23,13 @@ export const CinemaBooking = () => {
           "https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/66cb841556fe12d3cd890a9a/seat"
         );
 
-        const { rows, columns, price } = response.data;
+        const { rows, columns, price, projectionType, soundType } =
+          response.data;
         setRows(rows);
         setColumns(columns);
         setPrice(price);
+        setProjectionType(projectionType); // Set projection type from API
+        setSoundType(soundType); // Set sound type from API
       } catch (error) {
         console.error("Error fetching seat details:", error);
       } finally {
@@ -115,26 +120,8 @@ export const CinemaBooking = () => {
         </div>
       ) : (
         <>
+          {/* Display projection and sound type */}
           {renderRows()} {/* Render the rows if not loading */}
-          {/* <div className="mt-4">
-            <div className="text-lg font-bold">
-              Total Price: ${calculateTotalPrice().toFixed(2)}
-            </div>
-          </div>
-          <div className="mt-4">
-            <button
-              className="p-2 bg-blue-500 text-white rounded"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              Checkout
-            </button>
-            {hoverPrice > 0 && (
-              <div className="mt-2 text-lg font-bold">
-                Hover Price: ${hoverPrice.toFixed(2)}
-              </div>
-            )}
-          </div> */}
         </>
       )}
     </div>

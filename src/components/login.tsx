@@ -103,6 +103,10 @@ const Login = () => {
           Sign up now!
         </Link>
       </div>
+
+      <div className="text-gray-200 flex items-center justify-center text-sm mt-2">
+        <Link href={"/admin/login"}> Log in as admin !</Link>
+      </div>
     </div>
   );
 };

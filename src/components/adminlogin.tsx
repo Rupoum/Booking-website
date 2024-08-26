@@ -57,8 +57,9 @@ const Login = () => {
   return (
     <div className="mt-24 rounded-xl bg-black/80 py-10 px-6 md:mt-0 md:max-w-sm md:px-14">
       <form onSubmit={handleLogin}>
-        <div className="flex justify-center">
+        <div className="flex justify-center flex-col items-center">
           <h1 className="text-3xl font-semibold text-white">Login</h1>
+          <h1 className="text-sm font-normal text-white">as Admin</h1>
         </div>
         <div className="space-y-4 mt-5">
           <Input
@@ -99,7 +100,7 @@ const Login = () => {
 
       <div className="text-gray-500 text-sm mt-2">
         Don't have an account?
-        <Link href="/signup" className="text-white ml-1 hover:underline">
+        <Link href="/admin/signup" className="text-white ml-1 hover:underline">
           Sign up now!
         </Link>
       </div>
