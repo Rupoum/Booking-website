@@ -1,17 +1,18 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import SquareElem2 from "./SquareElem2";
-import { Skeleton } from "@/components/ui/skeleton"; // Ensure this path is correct
+import SquareElem2 from "@/components/booking/SquareElem2";
+import { Skeleton } from "@/components/ui/skeleton";
+import { loadStripe } from "@stripe/stripe-js";
+import {jwtDecode} from "jwt-decode";
 
 export const CinemaBooking = () => {
   const [rows, setRows] = useState<number>(0);
   const [columns, setColumns] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
-  const [selectedSeats, setSelectedSeats] = useState<
-    { row: number; column: number }[]>([]); // State to track selected seats
-  const [hoverPrice, setHoverPrice] = useState<number>(0); // State to track price on hover
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedSeats, setSelectedSeats] = useState<{ row: number; column: number }[]>([]);
+  const [hoverPrice, setHoverPrice] = useState<number>(0);
 
   useEffect(() => {
     const fetchSeatDetails = async () => {
@@ -19,7 +20,6 @@ export const CinemaBooking = () => {
         const response = await axios.get(
           "https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/66cb841556fe12d3cd890a9a/seat"
         );
-
         const { rows, columns, price } = response.data;
         setRows(rows);
         setColumns(columns);
@@ -27,7 +27,7 @@ export const CinemaBooking = () => {
       } catch (error) {
         console.error("Error fetching seat details:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
@@ -35,37 +35,69 @@ export const CinemaBooking = () => {
   }, []);
 
   const handleSelectSeat = (row: number, column: number) => {
-    console.log(`Selected Seat - Row: ${row + 1}, Column: ${column + 1}`); // Log the selected seat
+    console.log(`Selected Seat - Row: ${row + 1}, Column: ${column + 1}`);
     setSelectedSeats((prev) => {
-      // Toggle seat selection
       const isSelected = prev.some(
         (seat) => seat.row === row && seat.column === column
       );
       if (isSelected) {
         return prev.filter(
           (seat) => seat.row !== row || seat.column !== column
-        ); // Deselect if already selected
+        );
       } else {
-        return [...prev, { row, column }]; // Select the seat
+        return [...prev, { row, column }];
       }
     });
   };
 
-  const calculateTotalPrice = () => {
-    return selectedSeats.length * price; // Calculate total price based on selected seats
-  };
+  const calculateTotalPrice = () => selectedSeats.length * price;
 
   const handleMouseEnter = useCallback(() => {
-    setHoverPrice(calculateTotalPrice()); // Set hover price on mouse enter
+    setHoverPrice(calculateTotalPrice());
   }, [selectedSeats, price]);
 
   const handleMouseLeave = useCallback(() => {
-    setHoverPrice(0); // Reset hover price on mouse leave
+    setHoverPrice(0);
   }, []);
+
+  const handleCheckout = async () => {
+    try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("authtoken");
+  
+      if (!token) {
+        throw new Error("Token not found");
+      }
+      
+      // Decode the JWT token to get the user ID
+      const decodedToken: any = jwtDecode(token);
+      const userId = decodedToken.id;
+  
+      // Load Stripe
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
+  
+      // Make a POST request to your backend to create the Stripe session
+      const response = await axios.post("http://localhost:5000/api/screen/payment", {
+        userId: userId, // Use userId from decoded token
+        seats: selectedSeats, // Array of selected seats
+        price: calculateTotalPrice(), // Total price calculation function
+      });
+  
+      // Extract sessionId from response
+      const { sessionId } = response.data;
+  
+      // Redirect to Stripe's checkout page
+      const result = await stripe?.redirectToCheckout({ sessionId });
+      if (result?.error) {
+        console.error("Stripe Checkout error:", result.error.message);
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   const renderRows = () => {
     const rowElements: JSX.Element[] = [];
-
     for (let i = 0; i < rows; i++) {
       const columnElements: JSX.Element[] = [];
       for (let j = 0; j < columns; j++) {
@@ -78,7 +110,7 @@ export const CinemaBooking = () => {
             row={i}
             column={j}
             onSelect={handleSelectSeat}
-            selected={isSelected} // Pass selected state to SquareElem2
+            selected={isSelected}
           />
         );
       }
@@ -88,7 +120,6 @@ export const CinemaBooking = () => {
         </div>
       );
     }
-
     return (
       <div className="flex flex-col items-center gap-2 px-2 overflow-x-auto">
         {rowElements}
@@ -99,14 +130,13 @@ export const CinemaBooking = () => {
   return (
     <div className="w-full">
       {loading ? (
-        // Show skeletons while loading
         <div className="flex flex-col items-center gap-2">
           {Array.from({ length: 10 }).map((_, rowIndex) => (
             <div key={rowIndex} className="flex gap-4">
               {Array.from({ length: 10 }).map((_, colIndex) => (
                 <Skeleton
                   key={`${rowIndex}-${colIndex}`}
-                  className="w-5 h-5 bg-gray-200" // Add a background color for visibility
+                  className="w-5 h-5 bg-gray-200"
                 />
               ))}
             </div>
@@ -114,8 +144,8 @@ export const CinemaBooking = () => {
         </div>
       ) : (
         <>
-          {renderRows()} {/* Render the rows if not loading */}
-          {/* <div className="mt-4">
+          {renderRows()}
+          <div className="mt-4">
             <div className="text-lg font-bold">
               Total Price: ${calculateTotalPrice().toFixed(2)}
             </div>
@@ -125,6 +155,7 @@ export const CinemaBooking = () => {
               className="p-2 bg-blue-500 text-white rounded"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              onClick={handleCheckout}
             >
               Checkout
             </button>
@@ -133,7 +164,7 @@ export const CinemaBooking = () => {
                 Hover Price: ${hoverPrice.toFixed(2)}
               </div>
             )}
-          </div> */}
+          </div>
         </>
       )}
     </div>

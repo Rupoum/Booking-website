@@ -1,6 +1,7 @@
-import { CinemaBooking } from "@/components/booking/CinemaBooking";
+// import { CinemaBooking } from "@/components/booking/CinemaBooking";
 import Date from "@/components/booking/Date";
 import StraightScreen2 from "@/components/booking/StraightScreen2";
+import {CinemaBooking} from "@/components/templates/temp"
 import { Button } from "@/components/ui/button";
 import React from "react";
 
