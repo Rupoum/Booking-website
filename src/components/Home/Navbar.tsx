@@ -14,6 +14,7 @@ import { User } from "lucide-react";
 import { ModeToggle } from "../ui/themeToggle";
 import Logout from "../Logoutbtn";
 import { RecoilRoot } from "recoil";
+// import StaggeredDropDown from "../Profile";
 
 const HeaderNav = () => {
   const [droppdown, setdropdown] = useState(false);
@@ -24,23 +25,16 @@ const HeaderNav = () => {
     <Navbar
       shouldHideOnScroll
       isBlurred={true}
-      className="h-14 px-16 bg-transparent absolute z-10 text-white"
-      suppressHydrationWarning
+      className="h-14 px-16  z-10 text-black dark:bg-transparent dark:text-white"
     >
       <NavbarBrand>
         <p className="font-bold text-inherit">LOGO</p>
       </NavbarBrand>
-      <NavbarContent
-        className="hidden sm:flex gap-4"
-        justify="center"
-      ></NavbarContent>
-
-      <NavbarContent justify="center">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">
-            {/* <User onMouseOver={togglerdropdown} onMouseLeave={togglerdropdown}  /> */}
-          </Link>
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
           <Logout />
+
+          {/* <h2>hello2</h2> */}
         </NavbarItem>
         <NavbarItem>
           <ModeToggle />
@@ -51,3 +45,20 @@ const HeaderNav = () => {
 };
 
 export default HeaderNav;
+{
+  /* <NavbarContent justify="center">
+        <NavbarItem className="hidden lg:flex">
+          <Link href="#">
+            {/* <User onMouseOver={togglerdropdown} onMouseLeave={togglerdropdown}  /> */
+}
+// </Link>
+// <Logout />
+// </NavbarItem>
+// <NavbarItem>
+{
+  /* <ModeToggle /> */
+}
+{
+  /* </NavbarItem> */
+}
+// </NavbarContent> */}

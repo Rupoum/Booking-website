@@ -1,15 +1,14 @@
-"use client"
+"use client";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import Navbar from "@/components/Home/Navbar";
-import Footer from "@/components/Home/Footer";
-import { Toaster } from "@/components/ui/toaster"
 
-import Logout from "../components/Logoutbtn";
-import { RecoilRoot } from "recoil";
-import { useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+
+// import Logout from "../components/Logoutbtn";
+// import { RecoilRoot } from "recoil";
+// import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,10 +32,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar  />
+          {/* <Navbar /> */}
           {children}
           <Toaster />
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
