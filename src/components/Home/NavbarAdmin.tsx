@@ -14,9 +14,10 @@ import { User } from "lucide-react";
 import { ModeToggle } from "../ui/themeToggle";
 import Logout from "../Logoutbtn";
 import { RecoilRoot } from "recoil";
+import LogoutAdmin from "../LogoutAdmin";
 // import StaggeredDropDown from "../Profile";
 
-const HeaderNav = () => {
+const HeaderNavAdmin = () => {
   const [droppdown, setdropdown] = useState(false);
   const togglerdropdown = () => {
     setdropdown(!droppdown);
@@ -32,7 +33,7 @@ const HeaderNav = () => {
       </NavbarBrand>
       <NavbarContent className=" sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Logout />
+          <LogoutAdmin />
 
           {/* <h2>hello2</h2> */}
         </NavbarItem>
@@ -44,7 +45,7 @@ const HeaderNav = () => {
   );
 };
 
-export default HeaderNav;
+export default HeaderNavAdmin;
 {
   /* <NavbarContent justify="center">
         <NavbarItem className="hidden lg:flex">

@@ -93,7 +93,7 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
                     className="mx-2 sm:basis-auto md:basis-auto lg:basis-auto"
                   >
                     <Card
-                      className="relative w-56 h-64 flex flex-col justify-between bg-cover bg-center cursor-pointer"
+                      className="relative w-56 h-72 flex flex-col justify-between bg-cover bg-center cursor-pointer"
                       style={{ backgroundImage: `url('${movie.posterUrl}')` }}
                       onClick={() => openModal(movie)}
                       onMouseEnter={() => setHoveredMovie(movie)}

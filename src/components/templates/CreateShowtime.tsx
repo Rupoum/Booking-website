@@ -1,46 +1,50 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useToast } from '../molecules/Toaster/use-toast';
-import { Button } from '../atoms/button';
-import { Label } from '../atoms/label';
-import { Input } from '../atoms/input';
-import { Plus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useToast } from "../molecules/Toaster/use-toast";
+import { Button } from "../atoms/button";
+import { Label } from "../atoms/label";
+import { Input } from "../atoms/input";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const CreateShowtime = () => {
   const [form, setForm] = useState({
-    showtimes: [{ time: '' }],
-    screenId: '',
-    movieId: ''
+    showtimes: [{ time: "" }],
+    screenId: "",
+    movieId: "",
   });
 
   const [movies, setMovies] = useState([]);
   const [screens, setScreens] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/movie/movie');
+        const response = await axios.get(
+          "https://bookmyshowfinal.onrender.com/api/movie/movie"
+        );
         setMovies(response.data);
         // console.log(response.data);
       } catch (error) {
-        console.error('Error fetching movies:', error);
-        setError('Failed to fetch movies');
+        console.error("Error fetching movies:", error);
+        setError("Failed to fetch movies");
       }
     };
 
     const fetchScreens = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/cinema/cinema');
+        const response = await axios.get(
+          "https://bookmyshowfinal.onrender.com/api/cinema/cinema"
+        );
         setScreens(response.data);
       } catch (error) {
-        console.error('Error fetching screens:', error);
-        setError('Failed to fetch screens');
+        console.error("Error fetching screens:", error);
+        setError("Failed to fetch screens");
       }
     };
 
@@ -48,7 +52,10 @@ export const CreateShowtime = () => {
     fetchScreens();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, index?: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    index?: any
+  ) => {
     const { name, value } = e.target;
     if (index !== undefined) {
       const updatedShowtimes = [...form.showtimes];
@@ -62,14 +69,14 @@ export const CreateShowtime = () => {
   const handleAddShow = () => {
     setForm((prevForm) => ({
       ...prevForm,
-      showtimes: [...prevForm.showtimes, { time: '' }]
+      showtimes: [...prevForm.showtimes, { time: "" }],
     }));
   };
 
   const handleRemoveShow = (index: number) => {
     setForm((prevForm) => ({
       ...prevForm,
-      showtimes: prevForm.showtimes.filter((_, i) => i !== index)
+      showtimes: prevForm.showtimes.filter((_, i) => i !== index),
     }));
   };
 
@@ -77,30 +84,35 @@ export const CreateShowtime = () => {
     e.preventDefault();
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      await axios.post('http://localhost:5000/api/screen/screen', {
-        movieId: form.movieId,
-        screenId: form.screenId,
-        showtimes: form.showtimes.map((time) => ({ time: time.time }))
-      },{
-        headers: { Authorization: `Bearer ${localStorage.getItem("authtoken")}` },
-      }
-    );
-      toast({ title: 'Showtimes created successfully.' });
-      setForm({ showtimes: [{ time: '' }], screenId: '', movieId: '' });
-      router.replace('/manager/cinemas');
+      await axios.post(
+        "https://bookmyshowfinal.onrender.com/api/screen/screen",
+        {
+          movieId: form.movieId,
+          screenId: form.screenId,
+          showtimes: form.showtimes.map((time) => ({ time: time.time })),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
+          },
+        }
+      );
+      toast({ title: "Showtimes created successfully." });
+      setForm({ showtimes: [{ time: "" }], screenId: "", movieId: "" });
+      router.replace("/admin/listmovie");
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to create showtimes');
-      toast({ title: error.message, variant: 'destructive' });
+      setError(error.response?.data?.message || "Failed to create showtimes");
+      toast({ title: error.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className='flex justify-center  items-center mt-40'>
+    <div className="flex justify-center  items-center mt-40">
       <form onSubmit={handleSubmit}>
         <Label title="Movie">
           <select
@@ -119,22 +131,27 @@ export const CreateShowtime = () => {
         </Label>
 
         <Label title="Screen number">
-        <select
-          name="screenId"
-          value={form.screenId}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border rounded border-input"
-        >
-          <option value="">Select a screen...</option>
-          {screens.map((cinema: any) =>
-            cinema.screens.map((screen: any) => (
-              <option key={cinema.screens.map((screen: { _id: any; }) => screen._id)} value={ cinema.screens.map((screen: { _id: any; }) => screen._id)} >
-                {cinema.name} - Screen{screen.screenno}
-              </option>
-            ))
-          )}
-        </select>
-      </Label>
+          <select
+            name="screenId"
+            value={form.screenId}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded border-input"
+          >
+            <option value="">Select a screen...</option>
+            {screens.map((cinema: any) =>
+              cinema.screens.map((screen: any) => (
+                <option
+                  key={cinema.screens.map((screen: { _id: any }) => screen._id)}
+                  value={cinema.screens.map(
+                    (screen: { _id: any }) => screen._id
+                  )}
+                >
+                  {cinema.name} - Screen{screen.screenno}
+                </option>
+              ))
+            )}
+          </select>
+        </Label>
 
         <Label title="Shows">
           <div className="grid grid-cols-3 gap-2">

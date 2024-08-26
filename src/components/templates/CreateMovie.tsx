@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { app } from "@/components/utils/config/firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { any } from "zod";
+import Image from "next/image";
 
 enum Genre {
   Action = "Action",
@@ -40,7 +41,7 @@ export const CreateMovie = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value,files } = e.target;
+    const { name, value, files } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
       [name]: files ? files[0] : value,
@@ -63,19 +64,22 @@ export const CreateMovie = () => {
         const downloadURL = await getDownloadURL(storageRef);
 
         setImageURL(downloadURL);
-        form.posterUrl = downloadURL; 
-      
+        form.posterUrl = downloadURL;
       }
       const movieData = {
         ...form,
         posterUrl: imageURL || form.posterUrl,
       };
 
-      await axios.post("http://localhost:5000/api/movie/movie", movieData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
-        },
-      });
+      await axios.post(
+        "https://bookmyshowfinal.onrender.com/api/movie/movie",
+        movieData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
+          },
+        }
+      );
 
       toast({ title: "Movie created successfully." });
 
@@ -163,7 +167,7 @@ export const CreateMovie = () => {
               onChange={handleChange}
             />
             {imageURL && (
-              <img
+              <Image
                 src={imageURL}
                 alt="Uploaded Poster"
                 style={{ maxWidth: "200px" }}

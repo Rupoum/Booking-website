@@ -1,14 +1,10 @@
-"use client"
+"use client";
 import Login from "@/components/adminlogin";
 import { RecoilRoot } from "recoil";
-export default function Signup(){
-  return(
+export default function Signup() {
+  return (
     <RecoilRoot>
-    <Login>
-      
-    </Login>
-
-
+      <Login />
     </RecoilRoot>
-  )
+  );
 }
