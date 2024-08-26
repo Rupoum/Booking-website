@@ -10,8 +10,7 @@ export const CinemaBooking = () => {
   const [price, setPrice] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
   const [selectedSeats, setSelectedSeats] = useState<
-    { row: number; column: number }[]
-  >([]); // State to track selected seats
+    { row: number; column: number }[]>([]); // State to track selected seats
   const [hoverPrice, setHoverPrice] = useState<number>(0); // State to track price on hover
   const [projectionType, setProjectionType] = useState<string>(""); // State for projection type
   const [soundType, setSoundType] = useState<string>(""); // State for sound type
