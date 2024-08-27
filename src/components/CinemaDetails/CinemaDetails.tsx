@@ -119,7 +119,7 @@ const CinemaDetails = ({ movieId }: any) => {
               <div className="flex justify-start h-auto">
                 <div className="flex items-start pl-12 pt-3 text-[0.9rem]  flex-col font-semibold w-1/3">
                   <div className="flex ">
-                    <div className="">{cinema.name}</div>
+                    <div className="w-40">{cinema.name}</div>
 
                     <div className="ml-44 text-gray-400 flex gap-1">
                       <AlertDialog>
@@ -173,8 +173,20 @@ const CinemaDetails = ({ movieId }: any) => {
                     </div>
                   </div>
                   <div className=" flex gap-10 mt-16">
-                    <div>M-tickets</div>
-                    <div>Foods and Beverages</div>
+                    <div className="flex text-sm gap-1 text-green-600 ">
+                      {" "}
+                      <span>
+                        <Ticket />
+                      </span>
+                      M-tickets
+                    </div>
+                    <div className="flex text-sm items-center gap-1 text-yellow-600">
+                      <span>
+                        {" "}
+                        <Popcorn />
+                      </span>{" "}
+                      Foods and Beverages
+                    </div>
                   </div>
                 </div>
 
