@@ -17,7 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export const CinemaBooking = () => {
+export const CinemaBooking = ({screenId}:any) => {
   const [rows, setRows] = useState<number>(0);
   const [columns, setColumns] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
@@ -27,15 +27,16 @@ export const CinemaBooking = () => {
   const [selectedSeats, setSelectedSeats] = useState<
     { row: number; column: number }[]
   >([]);
-
+  
   useEffect(() => {
     const fetchSeatDetails = async () => {
       try {
         const response = await axios.get(
-          "https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/66cb841556fe12d3cd890a9a/seat"
+          `http://localhost:5000/api/screen/screen/cinema/${screenId}/seat`
         );
         const { rows, columns, price, projectionType, soundType } =
           response.data;
+          // console.log(rows);
         setRows(rows);
         setColumns(columns);
         setPrice(price);
@@ -190,6 +191,7 @@ export const CinemaBooking = () => {
                       </span>
                     </div>
                     <div className="mt-1 text-base text-black">
+                    {/* <h1>{rows}</h1> */}
                       Sound Type:
                       <span className="text-400 text-xs font-normal">
                         {soundType}
@@ -199,6 +201,7 @@ export const CinemaBooking = () => {
                 </SheetHeader>
                 <SheetFooter>
                   <Button onClick={handleCheckout} variant={"ghost"}>
+                   
                     Pay
                   </Button>
                 </SheetFooter>
