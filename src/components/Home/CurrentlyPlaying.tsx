@@ -55,17 +55,17 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
   };
 
   const closeModal = () => {
-    const params = new URLSearchParams(window.location.search);
-    params.delete('movieId');
-    window.history.pushState({}, '', `${window.location.pathname}/cinema-details/${params.toString()}`);
     setSelectedMovie(null);
+    // const params = new URLSearchParams(window.location.search);
+    // params.delete("movieId");
+    // router.push(`/`);
   };
 
   const handleBookTickets = () => {
     if (selectedMovie) {
       const params = new URLSearchParams(window.location.search);
       // params.set('movieId', selectedMovie._id);
-      router.push( `/cinema-details/${selectedMovie._id}`);
+      router.push(`/cinema-details/${selectedMovie._id}`);
       // Additional logic to navigate or handle booking can be added here
     }
   };

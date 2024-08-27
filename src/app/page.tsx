@@ -10,10 +10,9 @@ import CinemaDetails from "@/components/CinemaDetails/CinemaDetails";
 
 // import { Route } from "lucide-react";
 // import { BrowserRouter as Router, Route, switch } from "react-router-dom";
-import { BrowserRouter } from "react-router-dom";
+// import { BrowserRouter } from "react-router-dom";
 
 export default function Home() {
-  
   return (
     <div className="">
       {/* <MainHeader /> */}
@@ -22,9 +21,7 @@ export default function Home() {
         <SwipeCarousel />
       </div>
       <CurrentlyPlaying />
-     
-    
-    
+
       <ComingSoon />
       <Footer />
     </div>

@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton"; // Adjust the import path as necessary
 
-const MovieDetails = () => {
+const MovieDetails = ({ screenId }: any) => {
   const [projectionType, setProjectionType] = useState<string>("");
   const [soundType, setSoundType] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); // Loading state
@@ -14,7 +14,7 @@ const MovieDetails = () => {
     const fetchMovieDetails = async () => {
       try {
         const response = await axios.get(
-          "https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/66cb841556fe12d3cd890a9a/seat"
+          `https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/${screenId}/seat`
         );
 
         const { projectionType, soundType } = response.data; // Destructure the needed fields
@@ -41,11 +41,12 @@ const MovieDetails = () => {
         <div className="text-lg font-semibold">Movie Name</div>
         {loading ? (
           <div className="flex gap-2 text-xs items-center">
-            Projection Type:
+            Projection Type: {projectionType}
             <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
             {/* Skeleton for projection type */}
             <span>||</span>
-            Sound Type: <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
+            Sound Type: {soundType}{" "}
+            <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
             {/* Skeleton for sound type */}
           </div>
         ) : (

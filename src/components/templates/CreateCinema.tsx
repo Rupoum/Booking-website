@@ -3,7 +3,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 // import { useToast } from "../molecules/Toaster/use-toast";
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast";
 import { Label } from "../atoms/label";
 import { Input } from "../atoms/input";
 import { Button } from "../atoms/button";
@@ -36,9 +36,8 @@ interface ScreenState {
   rows: number;
   columns: number;
   price: number;
-  screenno:number;
+  screenno: number;
 }
-
 
 interface CinemaFormData {
   name: string;
@@ -48,18 +47,18 @@ interface CinemaFormData {
 }
 
 const initialScreenState: ScreenState = {
-  projectionType: '',
-  soundSystemType: '',
+  projectionType: "Select",
+  soundSystemType: "Select",
   rows: 0,
   columns: 0,
   price: 0,
-  screenno:0,
+  screenno: 0,
 };
 
 const initialFormData: CinemaFormData = {
-  name: '',
-  managerId: '',
-  Address: '',
+  name: "",
+  managerId: "",
+  Address: "",
   screens: [
     {
       ...initialScreenState,
@@ -67,19 +66,19 @@ const initialFormData: CinemaFormData = {
   ],
 };
 
-export const CreateCinema = () => (
-  <CreateCinemaContent />
-);
+export const CreateCinema = () => <CreateCinemaContent />;
 
 const CreateCinemaContent: React.FC = () => {
   const [formdata, setFormData] = useState<CinemaFormData>(initialFormData);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -87,7 +86,10 @@ const CreateCinemaContent: React.FC = () => {
     }));
   };
 
-  const handleScreenChange = (index: number, e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleScreenChange = (
+    index: number,
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
       const screens = [...prevData.screens];
@@ -113,28 +115,30 @@ const CreateCinemaContent: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    
+    setError("");
+
     const cinema = {
       name: formdata.name,
       Address: formdata.Address,
       managerId: formdata.managerId,
-      screens: formdata.screens.map(screen => ({
+      screens: formdata.screens.map((screen) => ({
         projectionType: screen.projectionType,
         soundSystemType: screen.soundSystemType,
         rows: screen.rows,
         columns: screen.columns,
         price: screen.price,
-        screenno:screen.screenno
+        screenno: screen.screenno,
       })),
     };
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/cinema/cinema",
+        "https://bookmyshowfinal.onrender.com/api/cinema/cinema",
         cinema,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("authtoken")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
+          },
         }
       );
       toast({ title: "Cinema created successfully." });
@@ -150,7 +154,9 @@ const CreateCinemaContent: React.FC = () => {
 
   return (
     <div>
-      <h1 className="my-10 text-4xl font-bold underline underline-offset-8">Create Cinema</h1>
+      <h1 className="my-10 text-4xl font-bold underline underline-offset-8">
+        Create Cinema
+      </h1>
       <form onSubmit={handleSubmit}>
         <Label title="Cinema Name" className="text-2xl">
           <Input
@@ -174,7 +180,11 @@ const CreateCinemaContent: React.FC = () => {
           onAddScreen={addScreen}
           onRemoveScreen={removeScreen}
         />
-        <Button type="submit" className="mt-6 text-black dark:text-black"  disabled={loading}>
+        <Button
+          type="submit"
+          className="mt-6 text-black dark:text-black"
+          disabled={loading}
+        >
           Create Cinema
         </Button>
         {error && <p className="text-red-600">{error}</p>}
@@ -185,18 +195,31 @@ const CreateCinemaContent: React.FC = () => {
 
 interface AddScreensProps {
   screens: ScreenState[];
-  onScreenChange: (index: number, e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onScreenChange: (
+    index: number,
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
   onAddScreen: () => void;
   onRemoveScreen: (index: number) => void;
 }
 
-const AddScreens: React.FC<AddScreensProps> = ({ screens, onScreenChange, onAddScreen, onRemoveScreen }) => {
+const AddScreens: React.FC<AddScreensProps> = ({
+  screens,
+  onScreenChange,
+  onAddScreen,
+  onRemoveScreen,
+}) => {
   return (
     <div>
       {screens.map((screen, index) => (
         <SimpleAccordion title={`Screen ${index + 1}`} key={index}>
           <div className="flex justify-end my-2">
-            <Button variant="link" size="sm" className="text-sm text-gray-600 underline underline-offset-2" onClick={() => onRemoveScreen(index)}>
+            <Button
+              variant="link"
+              size="sm"
+              className="text-sm text-gray-600 underline underline-offset-2"
+              onClick={() => onRemoveScreen(index)}
+            >
               Remove Screen
             </Button>
           </div>
@@ -238,17 +261,16 @@ const AddScreens: React.FC<AddScreensProps> = ({ screens, onScreenChange, onAddS
                   onChange={(e) => onScreenChange(index, e)}
                   className="text-black dark:text-black"
                 />
-                   
               </Label>
               <Label title="Screen No.">
-  <Input
-    name="screenno"
-    type="number"
-    value={screen.screenno}
-    onChange={(e) => onScreenChange(index, e)}
-    className="text-black dark:text-black"
-  />
-</Label>
+                <Input
+                  name="screenno"
+                  type="number"
+                  value={screen.screenno}
+                  onChange={(e) => onScreenChange(index, e)}
+                  className="text-black dark:text-black"
+                />
+              </Label>
 
               <Label title="Columns">
                 <Input
@@ -306,7 +328,11 @@ const Grid: React.FC<GridProps> = ({ rows, columns }) => {
       );
     }
 
-    return <div className="flex flex-col items-center gap-2 px-2 overflow-x-auto">{rowElements}</div>;
+    return (
+      <div className="flex flex-col items-center gap-2 px-2 overflow-x-auto">
+        {rowElements}
+      </div>
+    );
   };
 
   return (

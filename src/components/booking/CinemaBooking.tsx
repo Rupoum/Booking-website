@@ -4,7 +4,7 @@ import axios from "axios";
 import SquareElem2 from "@/components/booking/SquareElem2";
 import { Skeleton } from "@/components/ui/skeleton";
 import { loadStripe } from "@stripe/stripe-js";
-import {jwtDecode} from "jwt-decode"; // Corrected the import statement
+import { jwtDecode } from "jwt-decode"; // Corrected the import statement
 import StraightScreen2 from "./StraightScreen2";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export const CinemaBooking = ({screenId}:any) => {
+export const CinemaBooking = ({ screenId }: any) => {
   const [rows, setRows] = useState<number>(0);
   const [columns, setColumns] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
@@ -27,16 +27,16 @@ export const CinemaBooking = ({screenId}:any) => {
   const [selectedSeats, setSelectedSeats] = useState<
     { row: number; column: number }[]
   >([]);
-  
+
   useEffect(() => {
     const fetchSeatDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/screen/screen/cinema/${screenId}/seat`
+          `https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/${screenId}/seat`
         );
         const { rows, columns, price, projectionType, soundType } =
           response.data;
-          // console.log(rows);
+
         setRows(rows);
         setColumns(columns);
         setPrice(price);
@@ -96,7 +96,7 @@ export const CinemaBooking = ({screenId}:any) => {
       );
 
       const response = await axios.post(
-        "http://localhost:5000/api/screen/payment",
+        "https://bookmyshowfinal.onrender.com/api/screen/payment",
         {
           userId: userId,
           seats: selectedSeats,
@@ -191,7 +191,7 @@ export const CinemaBooking = ({screenId}:any) => {
                       </span>
                     </div>
                     <div className="mt-1 text-base text-black">
-                    {/* <h1>{rows}</h1> */}
+                      {/* <h1>{rows}</h1> */}
                       Sound Type:
                       <span className="text-400 text-xs font-normal">
                         {soundType}
@@ -201,7 +201,6 @@ export const CinemaBooking = ({screenId}:any) => {
                 </SheetHeader>
                 <SheetFooter>
                   <Button onClick={handleCheckout} variant={"ghost"}>
-                   
                     Pay
                   </Button>
                 </SheetFooter>
