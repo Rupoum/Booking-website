@@ -47,8 +47,8 @@ interface CinemaFormData {
 }
 
 const initialScreenState: ScreenState = {
-  projectionType: "Select",
-  soundSystemType: "Select",
+  projectionType: "",
+  soundSystemType: "",
   rows: 0,
   columns: 0,
   price: 0,
@@ -120,7 +120,7 @@ const CreateCinemaContent: React.FC = () => {
     const cinema = {
       name: formdata.name,
       Address: formdata.Address,
-      managerId: formdata.managerId,
+      // managerId: formdata.managerId,
       screens: formdata.screens.map((screen) => ({
         projectionType: screen.projectionType,
         soundSystemType: screen.soundSystemType,
@@ -133,7 +133,7 @@ const CreateCinemaContent: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "https://bookmyshowfinal.onrender.com/api/cinema/cinema",
+        "http://localhost:5000/api/cinema/cinema",
         cinema,
         {
           headers: {
@@ -316,9 +316,12 @@ const Grid: React.FC<GridProps> = ({ rows, columns }) => {
   const renderRows = () => {
     const rowElements = [];
 
+    let currentColumns = columns; // Start with the specified number of columns
+
     for (let i = 0; i < rows; i++) {
       const columnElements = [];
-      for (let j = 0; j < columns; j++) {
+      // Ensure we don't have negative or zero columns
+      for (let j = 0; j < Math.max(currentColumns, 0); j++) {
         columnElements.push(<Square key={`${i}-${j}`} />);
       }
       rowElements.push(
@@ -326,6 +329,8 @@ const Grid: React.FC<GridProps> = ({ rows, columns }) => {
           {columnElements}
         </div>
       );
+
+      currentColumns -= 5;
     }
 
     return (
