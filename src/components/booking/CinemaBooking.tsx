@@ -117,9 +117,11 @@ export const CinemaBooking = ({ screenId }: any) => {
 
   const renderRows = () => {
     const rowElements: JSX.Element[] = [];
+    let currentColumns = columns;
+
     for (let i = 0; i < rows; i++) {
       const columnElements: JSX.Element[] = [];
-      for (let j = 0; j < columns; j++) {
+      for (let j = 0; j < Math.max(currentColumns, 0); j++) {
         const isSelected = selectedSeats.some(
           (seat) => seat.row === i && seat.column === j
         );
@@ -138,6 +140,7 @@ export const CinemaBooking = ({ screenId }: any) => {
           {columnElements}
         </div>
       );
+      currentColumns -= 5;
     }
     return (
       <div className="flex flex-col items-center gap-2 px-2 overflow-x-auto">
