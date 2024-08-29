@@ -9,7 +9,7 @@ const page = ({ params }: any) => {
   return (
     <div>
       <div className="w-full h-32 py-5">
-        <MovieDetails />
+        <MovieDetails screenId={params.id} />
       </div>
       <div className="px-24">
         <Datecard />

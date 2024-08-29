@@ -20,6 +20,7 @@ const MovieDetails = ({ screenId }: any) => {
         const { projectionType, soundType } = response.data; // Destructure the needed fields
         setProjectionType(projectionType);
         setSoundType(soundType);
+        console.log(projectionType);
       } catch (error) {
         console.error("Error fetching movie details:", error);
       } finally {
