@@ -1,7 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Plus, ShoppingBag, User } from "lucide-react";
+import {
+  Clapperboard,
+  Plus,
+  Projector,
+  ShoppingBag,
+  User,
+  UsersRound,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -109,13 +116,59 @@ export default function LogoutAdmin() {
                 </span>
               </div>
             </div>
+            <div
+              className="mt-5 gap-5 flex items-center cursor-pointer px-7 hover:bg-gray-200 dark:hover:bg-gray-900 transition-colors duration-200 w-full p-2" // Added w-full and p-2
+              onClick={() => (window.location.href = "/admin/allUsers")} // Redirect on click
+            >
+              <div>
+                <UsersRound className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-gray-900 dark:text-white">
+                  Details of Users
+                </p>
+                <span className="text-xs text-gray-500 dark:text-gray-300">
+                  Get all the details of the user
+                </span>
+              </div>
+            </div>
+            <div
+              className="mt-5 gap-5 flex items-center cursor-pointer px-7 hover:bg-gray-200 dark:hover:bg-gray-900 transition-colors duration-200 w-full p-2" // Added w-full and p-2
+              onClick={() => (window.location.href = "/admin/listmovie")} // Redirect on click
+            >
+              <div>
+                <Clapperboard className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-gray-900 dark:text-white">All Movies</p>
+                <span className="text-xs text-gray-500 dark:text-gray-300">
+                  Get all the Movies
+                </span>
+              </div>
+            </div>
+            <div
+              className="mt-5 gap-5 flex items-center cursor-pointer px-7 hover:bg-gray-200 dark:hover:bg-gray-900 transition-colors duration-200 w-full p-2" // Added w-full and p-2
+              onClick={() => (window.location.href = "/admin/listcinema")} // Redirect on click
+            >
+              <div>
+                <Projector className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-gray-900 dark:text-white">All Cinemas</p>
+                <span className="text-xs text-gray-500 dark:text-gray-300">
+                  Get all the Cinemas
+                </span>
+              </div>
+            </div>
             {/* Spacer to push the button to the bottom */}
             <div className="mt-auto" />{" "}
             {/* This empty div will take up the remaining space */}
             <div className="flex justify-center mb-5">
-              <Button variant="destructive">
-                <Link href={"/admin/login"}>Sign Out</Link>
-              </Button>
+              <Link href={"/admin/login"}>
+                <Button variant="destructive" onClick={logout}>
+                  Sign Out
+                </Button>{" "}
+              </Link>
             </div>
           </SheetContent>
         </Sheet>

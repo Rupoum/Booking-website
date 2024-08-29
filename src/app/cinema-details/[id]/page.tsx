@@ -8,6 +8,7 @@ const page = ({ params }: any) => {
   return (
     <div>
       <CinemaDetails movieId={params.id} />
+      {/* cinema detaoils {params.id} */}
     </div>
   );
 };

@@ -64,7 +64,9 @@ export const CinemaInfo = ({ cinema }: { cinema: any }) => {
         {cinema.Screens && cinema.Screens.length > 0 ? (
           cinema.Screens.map((screen: any) => (
             <div key={screen.id}>
-              <div className="font-light text-xl ">Screen {screen.number}</div>
+              <div className="font-light text-xl ">
+                Screen {cinema.screens.screenno}
+              </div>
 
               {screen.Showtimes.length === 0 ? (
                 <AlertBox>
@@ -90,7 +92,7 @@ export const ShowScreenShowtimes = ({ screenId }: { screenId: number }) => {
     const fetchShowtimes = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/screen/screen/${screenId}`
+          `https://bookmyshowfinal.onrender.com/api/screen/screen/${screenId}`
         );
         setShowtimes(response.data);
       } catch (error) {
