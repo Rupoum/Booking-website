@@ -56,13 +56,14 @@ export const CreateMovie = () => {
         setUploading(true);
 
         const storage = getStorage(app);
-        const storageRef = ref(storage, `images/${form.posterUrl.name}`); // Use form.posterUrl.name
+        const storageRef = ref(storage, `images/${form.posterUrl.name}`);
         await uploadBytes(storageRef, form.posterUrl);
         const downloadURL = await getDownloadURL(storageRef);
 
         setImageURL(downloadURL);
         form.posterUrl = downloadURL;
       }
+
       const movieData = {
         ...form,
         posterUrl: imageURL || form.posterUrl,
@@ -80,6 +81,7 @@ export const CreateMovie = () => {
 
       toast.success("Movie created successfully."); // Use toast.success for success messages
 
+      // Reset the form
       setForm({
         title: "",
         director: "",
@@ -89,7 +91,10 @@ export const CreateMovie = () => {
         posterUrl: "",
       });
 
-      router.replace("/admin/movies");
+      // Set a timeout before navigating
+      setTimeout(() => {
+        router.replace("/admin/listmovie"); // Navigate to the desired route
+      }, 2000); // Adjust the timeout duration as needed (2000 ms = 2 seconds)
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to create movie");
       toast.error(error.message || "Failed to create movie"); // Use toast.error for error messages
@@ -166,6 +171,8 @@ export const CreateMovie = () => {
             {imageURL && (
               <Image
                 src={imageURL}
+                width={100}
+                height={100}
                 alt="Uploaded Poster"
                 style={{ maxWidth: "200px" }}
               />

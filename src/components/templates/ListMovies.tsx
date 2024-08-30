@@ -30,6 +30,9 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Button } from "../ui/button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 export interface IListMoviesProps {}
 
 export const ListMovies = ({}: IListMoviesProps) => {
@@ -37,7 +40,15 @@ export const ListMovies = ({}: IListMoviesProps) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredMovie, setHoveredMovie] = useState<any | null>(null);
-  const moviesPerPage = 5; // Number of movies to display per page
+  const moviesPerPage = 20; // Number of movies to display per page
+  const [inputValue, setInputValue] = useState<string>("");
+  const [selectedMovie, setSelectedMovie] = useState({ title: "", _id: "" });
+  const router = useRouter();
+  const handleInputChange = (e: any) => {
+    setInputValue(e.target.value);
+  };
+
+  const isDeleteEnabled = selectedMovie && inputValue === selectedMovie.title;
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, {
@@ -63,6 +74,36 @@ export const ListMovies = ({}: IListMoviesProps) => {
     fetchMovies();
   }, []);
 
+  const deleteMovie = async () => {
+    // const url = selectedMovie._id;
+    // console.log(url);
+
+    try {
+      const response = await axios.delete(
+        `https://bookmyshowfinal.onrender.com/api/movie/movie/${selectedMovie._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
+          },
+        }
+      );
+
+      toast("Movie delted succesfully");
+      setTimeout(() => {
+        router.replace("/admin/listmovie"); // Navigate to the desired route
+      }, 2000);
+
+      // Here you would typically update your state to remove the deleted movie
+      // setMovies(prevMovies => prevMovies.filter(movie => movie.id !== movies.id));
+    } catch (error) {
+      console.error("Error deleting movie", error);
+      toast.error("Error deleting movie");
+
+      // Optionally, set an error state to display to the user
+    } finally {
+      setLoading(false); // End loading regardless of success or failure
+    }
+  };
   if (loading) {
     return (
       <div className="flex flex-wrap gap-5 mt-6">
@@ -86,11 +127,21 @@ export const ListMovies = ({}: IListMoviesProps) => {
 
   return (
     <div className="px-10">
+      <ToastContainer // Add ToastContainer here
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <h1 className="flex justify-center py-10 font-medium text-2xl">
         All Movies
       </h1>
       <div className="flex flex-wrap gap-10 mt-6 justify-center">
-        {currentMovies.map((movie) => (
+        {currentMovies.map((movie: any) => (
           <div key={movie._id}>
             <Card
               className="relative w-56 h-72 flex flex-col justify-between bg-cover bg-center cursor-pointer"
@@ -100,13 +151,7 @@ export const ListMovies = ({}: IListMoviesProps) => {
             >
               {" "}
               {hoveredMovie === movie && (
-                <div
-                  className="absolute inset-0 bg-black bg-opacity-50 transition duration-500 flex items-center justify-center"
-                  // initial={{ opacity: 0, y: 20 }} // Start slightly below
-                  // animate={{ opacity: 1, y: 0 }} // Slide up to original position
-                  // exit={{ opacity: 0, y: 20 }} // Slide back down
-                  // transition={{ duration: 0.3 }} // Animation duration
-                >
+                <div className="absolute inset-0 bg-black bg-opacity-50 transition duration-500 flex items-center justify-center">
                   <motion.div
                     className="text-center flex gap-3 text-white"
                     initial={{ opacity: 0, y: 20 }}
@@ -115,28 +160,62 @@ export const ListMovies = ({}: IListMoviesProps) => {
                     transition={{ duration: 0.3 }}
                   >
                     <div>
+                      <Edit className="w-8 h-8 hover:text-green-600" />
+                    </div>
+                    <div>
                       <Drawer>
                         <DrawerTrigger>
-                          <Edit className="w-8 h-8 hover:text-green-600" />
+                          <Trash
+                            className="w-8 h-8 hover:text-red-600"
+                            onClick={() => setSelectedMovie(movie)}
+                          />
                         </DrawerTrigger>
-                        <DrawerContent>
+                        <DrawerContent className="px-20">
                           <DrawerHeader>
-                            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                            <DrawerTitle>
+                              Are you sure you want to delete the movie{" "}
+                              {movie.title} ?{" "}
+                            </DrawerTitle>
                             <DrawerDescription>
-                              This action cannot be undone.
+                              You can not revert back !
                             </DrawerDescription>
                           </DrawerHeader>
+
+                          <div className="my-4">
+                            <input
+                              type="text"
+                              placeholder="Type movie name to confirm"
+                              value={inputValue}
+                              onChange={handleInputChange}
+                              className="border p-2 w-full"
+                            />
+                          </div>
                           <DrawerFooter>
-                            <Button>Submit</Button>
-                            <DrawerClose>
-                              <Button variant="outline">Cancel</Button>
-                            </DrawerClose>
+                            <div className="flex justify-center items-center gap-2">
+                              <div className="">
+                                <Button
+                                  variant="destructive"
+                                  className="w-36 flex justify-center items-center gap-2 "
+                                  disabled={!isDeleteEnabled}
+                                  onClick={deleteMovie}
+                                >
+                                  {loading ? "Deleting..." : "Delete Movie"}
+                                  <span>
+                                    <Trash />
+                                  </span>
+                                </Button>
+                              </div>
+                              <div>
+                                <DrawerClose>
+                                  <Button variant="outline" className="w-28">
+                                    Cancel
+                                  </Button>
+                                </DrawerClose>
+                              </div>
+                            </div>
                           </DrawerFooter>
                         </DrawerContent>
                       </Drawer>
-                    </div>
-                    <div>
-                      <Trash className="w-8 h-8 hover:text-red-600" />
                     </div>
                   </motion.div>
                 </div>
