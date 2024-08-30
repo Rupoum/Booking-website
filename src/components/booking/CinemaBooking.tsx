@@ -16,6 +16,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+interface Seat {
+  row: number;
+  column: number;
+}
+
+interface SeatGroup {
+  seat: Seat[];
+}
+
+interface DecodedToken {
+  id: string;
+  // Add other fields if necessary
+}
 
 export const CinemaBooking = ({ screenId }: any) => {
   const [rows, setRows] = useState<number>(0);
@@ -23,25 +36,49 @@ export const CinemaBooking = ({ screenId }: any) => {
   const [price, setPrice] = useState<number>(0);
   const [projectionType, setProjectionType] = useState<string>("");
   const [soundType, setSoundType] = useState<string>("");
+  const [movie, setMovie] = useState<string>("");
+  const [cinema, setCinema] = useState<string>("");
+  const [screen, setScreen] = useState<string>("");
+  const [bookedSeats, setBookedSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedSeats, setSelectedSeats] = useState<
-    { row: number; column: number }[]
-  >([]);
-
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   useEffect(() => {
     const fetchSeatDetails = async () => {
       try {
         const response = await axios.get(
           `https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/${screenId}/seat`
         );
-        const { rows, columns, price, projectionType, soundType } =
-          response.data;
-
+        const {
+          rows,
+          columns,
+          price,
+          projectionType,
+          soundType,
+          moviename,
+          cinemaname,
+          bookedSeats = [],
+        } = response.data;
+        console.log(bookedSeats);
+        setScreen(screenId);
+        setMovie(moviename);
+        setCinema(cinemaname);
         setRows(rows);
         setColumns(columns);
         setPrice(price);
         setProjectionType(projectionType);
         setSoundType(soundType);
+
+        // Flatten and deduplicate booked seats
+        const flattenedBookedSeats = bookedSeats.flatMap(
+          (seatGroup: SeatGroup) => seatGroup.seat || []
+        );
+
+        const uniqueBookedSeats = Array.from(
+          new Set(flattenedBookedSeats.map((seat: any) => JSON.stringify(seat)))
+        ).map((seat: any) => JSON.parse(seat));
+
+        setBookedSeats(uniqueBookedSeats);
+        console.log("Unique booked seats:", uniqueBookedSeats);
       } catch (error) {
         console.error("Error fetching seat details:", error);
       } finally {
@@ -50,10 +87,10 @@ export const CinemaBooking = ({ screenId }: any) => {
     };
 
     fetchSeatDetails();
-  }, []);
+  }, [screenId]);
 
   const handleSelectSeat = (row: number, column: number) => {
-    console.log(`Selected Seat - Row: ${row + 1}, Column: ${column + 1}`);
+    // console.log(`Selected Seat - Row: ${row + 1}, Column: ${column + 1}`);
     setSelectedSeats((prev) => {
       const isSelected = prev.some(
         (seat) => seat.row === row && seat.column === column
@@ -94,17 +131,29 @@ export const CinemaBooking = ({ screenId }: any) => {
       const stripe = await loadStripe(
         process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
       );
-
+      if (!stripe) {
+        throw new Error("Stripe failed to initialize.");
+      }
+      const formattedSeats = selectedSeats.map((seat) => ({
+        row: seat.row,
+        column: seat.column,
+      }));
       const response = await axios.post(
         "https://bookmyshowfinal.onrender.com/api/screen/payment",
         {
           userId: userId,
-          seats: selectedSeats,
+          cinemaName: cinema,
+          movieName: movie,
+          seats: formattedSeats,
           price: calculateTotalPrice(),
+          screen_id: screenId,
         }
       );
 
       const { sessionId } = response.data;
+      if (!sessionId) {
+        throw new Error("Session ID not received from server.");
+      }
 
       const result = await stripe?.redirectToCheckout({ sessionId });
       if (result?.error) {
@@ -125,13 +174,17 @@ export const CinemaBooking = ({ screenId }: any) => {
         const isSelected = selectedSeats.some(
           (seat) => seat.row === i && seat.column === j
         );
+        const isBooked = bookedSeats.some(
+          (seat) => seat.row === i && seat.column === j
+        );
         columnElements.push(
           <SquareElem2
             key={`${i}-${j}`}
             row={i}
             column={j}
-            onSelect={handleSelectSeat}
+            onSelect={!isBooked ? handleSelectSeat : undefined}
             selected={isSelected}
+            booked={isBooked}
           />
         );
       }

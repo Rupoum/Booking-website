@@ -4,6 +4,7 @@ import { RecoilRoot } from "recoil";
 import { ListCinemas } from "../../../../components/templates/ListCinemas";
 // import ProtectedRoute from "@/components/atoms/protecting";
 import { withAuth } from "@/components/useauth";
+import CinemaLists from "@/components/templates/CinemaLists";
 // import CreateCinemaPage from "@/components/temp/createc";
 function Cinema() {
   return (
@@ -12,7 +13,8 @@ function Cinema() {
      
       </ProtectedRoute> */}
       <div className="flex justify-center items-center ">
-        <ListCinemas />
+        {/* <ListCinemas /> */}
+        <CinemaLists />
         {/* <CreateCinemaPage /> */}
       </div>
     </RecoilRoot>

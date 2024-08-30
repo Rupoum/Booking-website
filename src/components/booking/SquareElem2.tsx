@@ -2,6 +2,14 @@
 import React from "react";
 import { cn } from "../../components/utils";
 
+interface SquareElem2Props {
+  booked?: boolean;
+  selected?: boolean;
+  row: number;
+  column: number;
+  onSelect?: (row: number, column: number) => void; // Make onSelect optional
+}
+
 const SquareElem2 = ({
   booked = false,
   selected = false,
@@ -16,7 +24,7 @@ const SquareElem2 = ({
   onSelect: (row: number, column: number) => void; // Define the type for onSelect
 }) => {
   const handleClick = () => {
-    if (!booked) {
+    if (!booked && onSelect) {
       onSelect(row, column); // Call onSelect with row and column when clicked
     }
   };

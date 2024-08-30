@@ -1,4 +1,4 @@
-import { Edit, EllipsisVertical, Trash } from "lucide-react";
+import { Edit, Edit2, EllipsisVertical, Trash } from "lucide-react";
 
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -74,6 +74,14 @@ export const ListMovies = ({}: IListMoviesProps) => {
     fetchMovies();
   }, []);
 
+  const handleEdit = () => {
+    console.log("Selected Movie:", selectedMovie); // Check if this is defined
+    if (selectedMovie && selectedMovie._id) {
+      router.push(`/admin/edit-movie/${selectedMovie._id}`);
+    } else {
+      console.error("No movie selected or movie ID is missing.");
+    }
+  };
   const deleteMovie = async () => {
     // const url = selectedMovie._id;
     // console.log(url);
@@ -87,11 +95,11 @@ export const ListMovies = ({}: IListMoviesProps) => {
           },
         }
       );
-
-      toast("Movie delted succesfully");
       setTimeout(() => {
-        router.replace("/admin/listmovie"); // Navigate to the desired route
+        router.push("/admin/listmovie");
+        router.refresh(); // Navigate to the desired route
       }, 2000);
+      toast("Movie delted succesfully");
 
       // Here you would typically update your state to remove the deleted movie
       // setMovies(prevMovies => prevMovies.filter(movie => movie.id !== movies.id));
@@ -160,7 +168,13 @@ export const ListMovies = ({}: IListMoviesProps) => {
                     transition={{ duration: 0.3 }}
                   >
                     <div>
-                      <Edit className="w-8 h-8 hover:text-green-600" />
+                      <Edit2
+                        className="w-8 h-8 hover:text-green-600"
+                        onClick={() => {
+                          console.log("Edit icon clicked");
+                          handleEdit();
+                        }}
+                      />
                     </div>
                     <div>
                       <Drawer>
