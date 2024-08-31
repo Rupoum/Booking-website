@@ -1,14 +1,11 @@
-"use client";
-import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import type { Metadata } from "next";
+
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
-
-// import Logout from "../components/Logoutbtn";
-// import { RecoilRoot } from "recoil";
-// import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +31,7 @@ export default function RootLayout({
         >
           {/* <Navbar /> */}
           {children}
+          <Analytics />
           <Toaster />
         </ThemeProvider>
       </body>

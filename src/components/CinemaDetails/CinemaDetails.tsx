@@ -97,7 +97,7 @@ const CinemaDetails = ({ movieId }: any) => {
   }
 
   return (
-    <div className="mt-20 border-2 border-gray-300">
+    <div className="mt-7 border-2 border-gray-300">
       <div className="w-full h-32 flex flex-col justify-center bg-gray-100">
         <div className="sm:mx-40 mx-4">
           <h1 className="font-sans text-4xl">{cinemaDetails[0].moviename}</h1>

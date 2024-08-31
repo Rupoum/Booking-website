@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"; // Adjust the import path a
 const MovieDetails = ({ screenId }: any) => {
   const [projectionType, setProjectionType] = useState<string>("");
   const [soundType, setSoundType] = useState<string>("");
+  const [moviename, setMovieName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); // Loading state
 
   useEffect(() => {
@@ -17,9 +18,10 @@ const MovieDetails = ({ screenId }: any) => {
           `https://bookmyshowfinal.onrender.com/api/screen/screen/cinema/${screenId}/seat`
         );
 
-        const { projectionType, soundType } = response.data; // Destructure the needed fields
+        const { projectionType, soundType, moviename } = response.data; // Destructure the needed fields
         setProjectionType(projectionType);
         setSoundType(soundType);
+        setMovieName(moviename);
         console.log(projectionType);
       } catch (error) {
         console.error("Error fetching movie details:", error);
@@ -39,16 +41,19 @@ const MovieDetails = ({ screenId }: any) => {
         </Link>
       </div>
       <div className="flex flex-col items-center">
-        <div className="text-lg font-semibold">Movie Name</div>
+        <div className="text-lg font-semibold">{moviename}</div>
         {loading ? (
-          <div className="flex gap-2 text-xs items-center">
-            Projection Type: {projectionType}
-            <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
-            {/* Skeleton for projection type */}
-            <span>||</span>
-            Sound Type: {soundType}{" "}
-            <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
-            {/* Skeleton for sound type */}
+          <div>
+            <Skeleton className="h-4 w-20 ml-5 bg-slate-200" />
+            <div className="flex gap-2 text-xs items-center">
+              Projection Type: {projectionType}
+              <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
+              {/* Skeleton for projection type */}
+              <span>||</span>
+              Sound Type: {soundType}{" "}
+              <Skeleton className="h-4 w-10 bg-slate-200" />{" "}
+              {/* Skeleton for sound type */}
+            </div>
           </div>
         ) : (
           <div className="flex gap-2 text-xs items-center">

@@ -69,74 +69,80 @@ const page = ({ params }: any) => {
           <TableRow>
             <TableCell className="font-medium">Movie ID</TableCell>
             <TableCell>
-              {bookingData.map((booking) => (
-                <Accordion type="single" collapsible key={booking._id}>
-                  <AccordionItem value={booking._id}>
-                    <AccordionTrigger>
-                      <div>
-                        <strong>Cinema:</strong> {booking.cinema},{" "}
-                        <strong>Movie:</strong> {booking.movie_id}
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <Table>
-                        <TableCaption>Booking Details</TableCaption>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Detail</TableHead>
-                            <TableHead>Value</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              User ID
-                            </TableCell>
-                            <TableCell>{booking.user_id}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Movie ID
-                            </TableCell>
-                            <TableCell>{booking.movie_id}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Status
-                            </TableCell>
-                            <TableCell>{booking.status}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Screen ID
-                            </TableCell>
-                            <TableCell>{booking.screen_id}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">Seats</TableCell>
-                            <TableCell>
-                              {booking.seat_id
-                                .map(
-                                  (seat: any) =>
-                                    `Row ${seat.row + 1}, Column ${
-                                      seat.column + 1
-                                    }`
-                                )
-                                .join(", ")}
-                            </TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell className="font-medium">
-                              Cinema
-                            </TableCell>
-                            <TableCell>{booking.cinema}</TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              ))}
+              {bookingData.length === 0 ? (
+                <div>No bookings available</div>
+              ) : (
+                bookingData.map((booking) => (
+                  <Accordion type="single" collapsible key={booking._id}>
+                    <AccordionItem value={booking._id}>
+                      <AccordionTrigger>
+                        <div>
+                          <strong>Cinema:</strong> {booking.cinema},{" "}
+                          <strong>Movie:</strong> {booking.movie_id}
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <Table>
+                          <TableCaption>Booking Details</TableCaption>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Detail</TableHead>
+                              <TableHead>Value</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell className="font-medium">
+                                User ID
+                              </TableCell>
+                              <TableCell>{booking.user_id}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">
+                                Movie Name
+                              </TableCell>
+                              <TableCell>{booking.movie_id}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">
+                                Status
+                              </TableCell>
+                              <TableCell>{booking.status}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">
+                                Screen ID
+                              </TableCell>
+                              <TableCell>{booking.screen_id}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">
+                                Seats
+                              </TableCell>
+                              <TableCell>
+                                {booking.seat_id
+                                  .map(
+                                    (seat: any) =>
+                                      `Row ${seat.row + 1}, Column ${
+                                        seat.column + 1
+                                      }`
+                                  )
+                                  .join(", ")}
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell className="font-medium">
+                                Cinema
+                              </TableCell>
+                              <TableCell>{booking.cinema}</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                ))
+              )}
             </TableCell>
           </TableRow>
         </TableBody>
