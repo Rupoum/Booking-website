@@ -33,6 +33,7 @@ import { Button } from "../ui/button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 export interface IListMoviesProps {}
 
 export const ListMovies = ({}: IListMoviesProps) => {
@@ -74,14 +75,6 @@ export const ListMovies = ({}: IListMoviesProps) => {
     fetchMovies();
   }, []);
 
-  const handleEdit = () => {
-    console.log("Selected Movie:", selectedMovie); // Check if this is defined
-    if (selectedMovie && selectedMovie._id) {
-      router.push(`/admin/edit-movie/${selectedMovie._id}`);
-    } else {
-      console.error("No movie selected or movie ID is missing.");
-    }
-  };
   const deleteMovie = async () => {
     // const url = selectedMovie._id;
     // console.log(url);
@@ -168,13 +161,9 @@ export const ListMovies = ({}: IListMoviesProps) => {
                     transition={{ duration: 0.3 }}
                   >
                     <div>
-                      <Edit2
-                        className="w-8 h-8 hover:text-green-600"
-                        onClick={() => {
-                          console.log("Edit icon clicked");
-                          handleEdit();
-                        }}
-                      />
+                      <Link href={`/admin/edit-movie/${movie._id}`}>
+                        <Edit2 className="w-8 h-8 hover:text-green-600" />
+                      </Link>
                     </div>
                     <div>
                       <Drawer>
