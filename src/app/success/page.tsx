@@ -14,6 +14,7 @@ export default function Home() {
     seats: "RY-B13,B14",
     bookingId: "T9ADJMV",
     cancellationPolicy: "cut-off time of 20 minutes before showtime",
+    price: "120.00",
   };
 
   return (

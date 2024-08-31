@@ -117,7 +117,7 @@ export const CreateShowtime = () => {
       <form onSubmit={handleSubmit}>
         <Label title="Movie">
           <select
-            name="movieId"
+            title="movieId"
             value={form.movieId}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded border-input"
@@ -133,7 +133,7 @@ export const CreateShowtime = () => {
 
         <Label title="Screen number">
           <select
-            name="screenId"
+            title="screenId"
             value={form.screenId}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded border-input"
