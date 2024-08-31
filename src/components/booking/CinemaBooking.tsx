@@ -182,7 +182,7 @@ export const CinemaBooking = ({ screenId }: any) => {
             key={`${i}-${j}`}
             row={i}
             column={j}
-            onSelect={!isBooked ? handleSelectSeat : undefined}
+            onSelect={!isBooked ? handleSelectSeat : () => {}}
             selected={isSelected}
             booked={isBooked}
           />

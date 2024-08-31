@@ -179,7 +179,7 @@ const CurrentlyPlaying = () => {
 
       <Dialog open={!!selectedMovie} onOpenChange={closeModal}>
         <DialogContent>
-          <DialogTitle>{selectedMovie?.title}</DialogTitle>
+          <DialogTitle>{selectedMovie?.name}</DialogTitle>
           {/* <Image
             src={
               selectedMovie?.posterUrl?.startsWith("http")

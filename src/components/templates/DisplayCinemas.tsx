@@ -1,44 +1,44 @@
-import { useEffect, useMemo, useState } from "react";
-import { LngLatBounds, useMap } from "react-map-gl";
-// import { MarkerCinema } from './MarkerCinema'
-import { MovieDialog } from "./MovieDialog";
+// import { useEffect, useMemo, useState } from "react";
+// import { LngLatBounds, useMap } from "react-map-gl";
+// // import { MarkerCinema } from './MarkerCinema'
+// import { MovieDialog } from "./MovieDialog";
 
-export const DisplayCinemas = () => {
-  const { current: map } = useMap();
+// export const DisplayCinemas = () => {
+//   const { current: map } = useMap();
 
-  const [bounds, setBounds] = useState<LngLatBounds>();
-  useEffect(() => {
-    const bounds = map?.getBounds();
-    setBounds(bounds);
-  }, [map]);
+//   const [bounds, setBounds] = useState<LngLatBounds>();
+//   useEffect(() => {
+//     const bounds = map?.getBounds();
+//     setBounds(bounds);
+//   }, [map]);
 
-  const locationFilter = useMemo(
-    () => ({
-      ne_lat: bounds?.getNorthEast().lat || 0,
-      ne_lng: bounds?.getNorthEast().lng || 0,
-      sw_lat: bounds?.getSouthWest().lat || 0,
-      sw_lng: bounds?.getSouthWest().lng || 0,
-    }),
-    [bounds]
-  );
+//   const locationFilter = useMemo(
+//     () => ({
+//       ne_lat: bounds?.getNorthEast().lat || 0,
+//       ne_lng: bounds?.getNorthEast().lng || 0,
+//       sw_lat: bounds?.getSouthWest().lat || 0,
+//       sw_lng: bounds?.getSouthWest().lng || 0,
+//     }),
+//     [bounds]
+//   );
 
-  const { data, refetch } = trpcClient.cinemas.searchCinemas.useQuery({
-    addressWhere: locationFilter,
-  });
+//   const { data, refetch } = trpcClient.cinemas.searchCinemas.useQuery({
+//     addressWhere: locationFilter,
+//   });
 
-  console.log("data", data);
+//   console.log("data", data);
 
-  useEffect(() => {
-    refetch();
-  }, [bounds, refetch]);
+//   useEffect(() => {
+//     refetch();
+//   }, [bounds, refetch]);
 
-  return (
-    <>
-      <MovieDialog />
+//   return (
+//     <>
+//       <MovieDialog />
 
-      {data?.map((cinema: any) => (
-        <MarkerCinema key={cinema.id} cinema={cinema} />
-      ))}
-    </>
-  );
-};
+//       {data?.map((cinema: any) => (
+//         <MarkerCinema key={cinema.id} cinema={cinema} />
+//       ))}
+//     </>
+//   );
+// };

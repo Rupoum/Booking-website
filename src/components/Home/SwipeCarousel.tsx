@@ -110,6 +110,7 @@ const Dots = ({ imgIndex, setImgIndex }: any) => {
       {imgs.map((_, idx) => {
         return (
           <button
+            title="button"
             key={idx}
             onClick={() => setImgIndex(idx)}
             className={`h-2 w-2 rounded-full transition-colors ${
