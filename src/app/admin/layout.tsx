@@ -2,6 +2,7 @@
 import Image from "next/image";
 import BackgroundImage from "../../../public/assets/coverBg.png";
 import HeaderNavAdmin from "@/components/Home/NavbarAdmin";
+import { Suspense } from "react";
 
 export default function AuthLayout({
   children,
@@ -11,7 +12,7 @@ export default function AuthLayout({
   return (
     <div className="">
       {/* <HeaderNavAdmin /> */}
-      {children}
+      <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
     </div>
   );
 }

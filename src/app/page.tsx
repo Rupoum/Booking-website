@@ -7,6 +7,7 @@ import { SwipeCarousel } from "@/components/Home/SwipeCarousel";
 import Navbar from "@/components/Home/Navbar";
 import Footer from "@/components/Home/Footer";
 import CinemaDetails from "@/components/CinemaDetails/CinemaDetails";
+import { Suspense } from "react";
 
 // import { Route } from "lucide-react";
 // import { BrowserRouter as Router, Route, switch } from "react-router-dom";
@@ -15,15 +16,17 @@ import CinemaDetails from "@/components/CinemaDetails/CinemaDetails";
 export default function Home() {
   return (
     <div className="">
-      {/* <MainHeader /> */}
-      <Navbar />
-      <div className="px-16">
-        <SwipeCarousel />
-      </div>
-      <CurrentlyPlaying />
+      <Suspense>
+        {/* <MainHeader /> */}
+        <Navbar />
+        <div className="px-16">
+          <SwipeCarousel />
+        </div>
+        <CurrentlyPlaying />
 
-      <ComingSoon />
-      <Footer />
+        <ComingSoon />
+        <Footer />
+      </Suspense>
     </div>
   );
 }

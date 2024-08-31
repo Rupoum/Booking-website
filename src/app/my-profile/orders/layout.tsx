@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/Home/Navbar";
 import Footer from "@/components/Home/Footer";
+import { Suspense } from "react";
 export default function AuthLayout({
   children,
 }: Readonly<{
@@ -8,9 +9,12 @@ export default function AuthLayout({
 }>) {
   return (
     <div suppressHydrationWarning>
-      <Navbar />
-      {children}
-      <Footer />
+      <Suspense>
+        <Navbar />
+
+        {children}
+        <Footer />
+      </Suspense>
     </div>
   );
 }
