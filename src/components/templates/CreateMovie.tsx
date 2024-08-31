@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import axios from "axios";
 import { Label } from "../atoms/label";
@@ -8,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { app } from "@/components/utils/config/firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import Image from "next/image";
-import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 enum Genre {
@@ -20,7 +21,14 @@ enum Genre {
 }
 
 export const CreateMovie = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    title: string;
+    director: string;
+    duration: string;
+    releaseDate: string;
+    genre: string;
+    posterUrl: string | File; // Allow both string and File
+  }>({
     title: "",
     director: "",
     duration: "",
@@ -38,12 +46,11 @@ export const CreateMovie = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    const files: any = e.target as HTMLInputElement;
+    const { name, value, files } = e.target as HTMLInputElement;
 
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: files ? files[0] : value,
+      [name]: files && files[0] ? files[0] : value,
     }));
   };
 
@@ -54,11 +61,11 @@ export const CreateMovie = () => {
     setError("");
 
     try {
-      if (form.posterUrl && form.posterUrl.constructor === File) {
+      if (form.posterUrl && form.posterUrl instanceof File) {
         setUploading(true);
 
         const storage = getStorage(app);
-        const storageRef = ref(storage, `images/${form.posterUrl}`);
+        const storageRef = ref(storage, `images/${form.posterUrl.name}`);
         await uploadBytes(storageRef, form.posterUrl);
         const downloadURL = await getDownloadURL(storageRef);
 
@@ -81,7 +88,7 @@ export const CreateMovie = () => {
         }
       );
 
-      toast.success("Movie created successfully."); // Use toast.success for success messages
+      toast.success("Movie created successfully.");
 
       // Reset the form
       setForm({
@@ -93,13 +100,13 @@ export const CreateMovie = () => {
         posterUrl: "",
       });
 
-      // Set a timeout before navigating
       setTimeout(() => {
-        router.replace("/admin/listmovie"); // Navigate to the desired route
-      }, 2000); // Adjust the timeout duration as needed (2000 ms = 2 seconds)
+        router.replace("/admin/listmovie");
+      }, 2000);
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to create movie");
-      toast.error(error.message || "Failed to create movie"); // Use toast.error for error messages
+      console.log(error);
+      toast.error(error.message || "Failed to create movie");
     } finally {
       setLoading(false);
       setUploading(false);
@@ -187,7 +194,7 @@ export const CreateMovie = () => {
           </Button>
         </div>
       </form>
-      <ToastContainer // Add ToastContainer here
+      <ToastContainer
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
