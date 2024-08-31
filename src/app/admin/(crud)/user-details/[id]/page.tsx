@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -13,6 +14,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const page = ({ params }: any) => {
   // Sample user data based on the provided details
@@ -40,6 +43,38 @@ const page = ({ params }: any) => {
     // You can add more invoices here
   ];
 
+  const [bookingData, setBookingData] = useState({
+    cinema: "",
+    movie_id: "",
+    seat_id: [],
+    status: "",
+    user_id: "",
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBookingData = async () => {
+      try {
+        const response = await axios.get(
+          `https://bookmyshowfinal.onrender.com/api/customer/booking/${params.id}`
+        );
+        const data = await response.data;
+        setBookingData(data);
+      } catch (error) {
+        console.error("Error fetching booking data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBookingData();
+  }, [params.id]);
+
+  console.log(bookingData);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <div>User Details for ID: {params.id}</div>
@@ -59,10 +94,13 @@ const page = ({ params }: any) => {
 
           <TableRow>
             <TableCell className="font-medium">Movie ID</TableCell>
-            <TableCell>{userDetails.movie_id}</TableCell>
+
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
-                <AccordionTrigger></AccordionTrigger>
+                <AccordionTrigger>
+                  {" "}
+                  <TableCell>{userDetails.movie_id}</TableCell>
+                </AccordionTrigger>
                 <AccordionContent>
                   {" "}
                   <TableRow>

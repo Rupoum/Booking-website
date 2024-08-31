@@ -59,8 +59,8 @@ export const CreateShowtime = () => {
     const { name, value } = e.target;
     if (index !== undefined) {
       const updatedShowtimes = [...form.showtimes];
-      const name: "time" = "time"; // If 'name' can only be 'time'
-      updatedShowtimes[index][name] = value;
+      updatedShowtimes[index][name as keyof (typeof updatedShowtimes)[0]] =
+        value;
       setForm({ ...form, showtimes: updatedShowtimes });
     } else {
       setForm({ ...form, [name]: value });
@@ -117,7 +117,7 @@ export const CreateShowtime = () => {
       <form onSubmit={handleSubmit}>
         <Label title="Movie">
           <select
-            title="movieId"
+            name="movieId"
             value={form.movieId}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded border-input"
@@ -133,7 +133,7 @@ export const CreateShowtime = () => {
 
         <Label title="Screen number">
           <select
-            title="screenId"
+            name="screenId"
             value={form.screenId}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded border-input"
