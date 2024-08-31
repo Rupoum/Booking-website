@@ -16,40 +16,10 @@ import {
 } from "@/components/ui/accordion";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const page = ({ params }: any) => {
-  // Sample user data based on the provided details
-  const userDetails = {
-    _id: "66d309b52f0359f55242299e",
-    user_id: "66d1fbcb639a4e88bf62b5b7",
-    status: "confirmed",
-    cinema: "Cineopolis",
-    movie_id: "Stree 2",
-    screen_id: "66cd60372c0cc7ab17952c2a",
-    seat_id: [
-      { row: 6, column: 8, _id: "66d309b52f0359f55242299f" },
-      { row: 6, column: 9, _id: "66d309b52f0359f5524229a0" },
-    ],
-  };
-
-  // Sample invoice data
-  const invoices = [
-    {
-      invoice: "INV001",
-      status: "Paid",
-      method: "Credit Card",
-      amount: "$250.00",
-    },
-    // You can add more invoices here
-  ];
-
-  const [bookingData, setBookingData] = useState({
-    cinema: "",
-    movie_id: "",
-    seat_id: [],
-    status: "",
-    user_id: "",
-  });
+  const [bookingData, setBookingData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,7 +29,7 @@ const page = ({ params }: any) => {
           `https://bookmyshowfinal.onrender.com/api/customer/booking/${params.id}`
         );
         const data = await response.data;
-        setBookingData(data);
+        setBookingData(data.booking);
       } catch (error) {
         console.error("Error fetching booking data:", error);
       } finally {
@@ -69,74 +39,105 @@ const page = ({ params }: any) => {
     fetchBookingData();
   }, [params.id]);
 
-  console.log(bookingData);
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="px-24 mt-10">
+        <Skeleton className="h-8 w-1/2 mb-4" /> {/* Skeleton for User ID */}
+        <Skeleton className="h-8 w-full mb-4" /> {/* Skeleton for Movie ID */}
+        <Skeleton className="h-40 w-full" />{" "}
+        {/* Skeleton for Booking Details Table */}
+      </div>
+    );
   }
 
   return (
-    <div>
-      <div>User Details for ID: {params.id}</div>
+    <div className="px-24 mt-10">
       <Table>
         <TableCaption>User and Invoice Details</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>User Id</TableHead>
-            <TableHead>Value</TableHead>
+            <TableHead>ID-Name</TableHead>
+            <TableHead>Details</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
             <TableCell className="font-medium">User ID</TableCell>
-            <TableCell>{userDetails.user_id}</TableCell>
+            <TableCell>{params.id}</TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell className="font-medium">Movie ID</TableCell>
-
-            <Accordion type="single" collapsible>
-              <AccordionItem value="item-1">
-                <AccordionTrigger>
-                  {" "}
-                  <TableCell>{userDetails.movie_id}</TableCell>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {" "}
-                  <TableRow>
-                    <TableCell className="font-medium">Status</TableCell>
-                    <TableCell>{userDetails.status}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">Screen ID</TableCell>
-                    <TableCell>{userDetails.screen_id}</TableCell>
-                  </TableRow>{" "}
-                  <TableRow>
-                    <TableCell className="font-medium">Seats</TableCell>
-                    <TableCell>
-                      {userDetails.seat_id
-                        .map((seat) => `Row ${seat.row}, Column ${seat.column}`)
-                        .join(", ")}
-                    </TableCell>
-                  </TableRow>{" "}
-                  <TableRow>
-                    <TableCell className="font-medium">Invoice</TableCell>
-                    <TableCell>
-                      {invoices.map((invoice) => (
-                        <div key={invoice.invoice}>
-                          {invoice.invoice} - {invoice.status} -{" "}
-                          {invoice.method} - {invoice.amount}
-                        </div>
-                      ))}
-                    </TableCell>
-                  </TableRow>{" "}
-                  <TableRow>
-                    <TableCell className="font-medium">Cinema</TableCell>
-                    <TableCell>{userDetails.cinema}</TableCell>
-                  </TableRow>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            <TableCell>
+              {bookingData.map((booking) => (
+                <Accordion type="single" collapsible key={booking._id}>
+                  <AccordionItem value={booking._id}>
+                    <AccordionTrigger>
+                      <div>
+                        <strong>Cinema:</strong> {booking.cinema},{" "}
+                        <strong>Movie:</strong> {booking.movie_id}
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <Table>
+                        <TableCaption>Booking Details</TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Detail</TableHead>
+                            <TableHead>Value</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              User ID
+                            </TableCell>
+                            <TableCell>{booking.user_id}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Movie ID
+                            </TableCell>
+                            <TableCell>{booking.movie_id}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Status
+                            </TableCell>
+                            <TableCell>{booking.status}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Screen ID
+                            </TableCell>
+                            <TableCell>{booking.screen_id}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">Seats</TableCell>
+                            <TableCell>
+                              {booking.seat_id
+                                .map(
+                                  (seat: any) =>
+                                    `Row ${seat.row + 1}, Column ${
+                                      seat.column + 1
+                                    }`
+                                )
+                                .join(", ")}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              Cinema
+                            </TableCell>
+                            <TableCell>{booking.cinema}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              ))}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
