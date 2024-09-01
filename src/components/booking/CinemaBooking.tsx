@@ -4,7 +4,7 @@ import axios from "axios";
 import SquareElem2 from "@/components/booking/SquareElem2";
 import { Skeleton } from "@/components/ui/skeleton";
 import { loadStripe } from "@stripe/stripe-js";
-import { jwtDecode } from "jwt-decode"; // Corrected the import statement
+import { jwtDecode } from "jwt-decode";
 import StraightScreen2 from "./StraightScreen2";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
+
 interface Seat {
   row: number;
   column: number;
@@ -27,7 +31,6 @@ interface SeatGroup {
 
 interface DecodedToken {
   id: string;
-  // Add other fields if necessary
 }
 
 export const CinemaBooking = ({ screenId }: any) => {
@@ -42,6 +45,8 @@ export const CinemaBooking = ({ screenId }: any) => {
   const [bookedSeats, setBookedSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+  const [isTokenAvailable, setIsTokenAvailable] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchSeatDetails = async () => {
       try {
@@ -65,10 +70,10 @@ export const CinemaBooking = ({ screenId }: any) => {
         setRows(rows);
         setColumns(columns);
         setPrice(price);
-        setProjectionType(projectionType);
-        setSoundType(soundType);
 
-        // Flatten and deduplicate booked seats
+        setProjectionType(projectionType || "N/A");
+        setSoundType(soundType || "N/A");
+
         const flattenedBookedSeats = bookedSeats.flatMap(
           (seatGroup: SeatGroup) => seatGroup.seat || []
         );
@@ -89,8 +94,12 @@ export const CinemaBooking = ({ screenId }: any) => {
     fetchSeatDetails();
   }, [screenId]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("authtoken");
+    setIsTokenAvailable(!!token);
+  }, []);
+
   const handleSelectSeat = (row: number, column: number) => {
-    // console.log(`Selected Seat - Row: ${row + 1}, Column: ${column + 1}`);
     setSelectedSeats((prev) => {
       const isSelected = prev.some(
         (seat) => seat.row === row && seat.column === column
@@ -122,7 +131,21 @@ export const CinemaBooking = ({ screenId }: any) => {
       const token = localStorage.getItem("authtoken");
 
       if (!token) {
-        throw new Error("Token not found");
+        toast.error(
+          <div className="text-black ">
+            You are not Logged in !
+            <Link
+              href="/login"
+              className="underline underline-offset-2 text-gray-500 cursor-pointer"
+            >
+              {" "}
+              Login !
+            </Link>
+            .
+          </div>
+        );
+        setIsTokenAvailable(false);
+        return;
       }
 
       const decodedToken: any = jwtDecode(token);
@@ -204,6 +227,7 @@ export const CinemaBooking = ({ screenId }: any) => {
 
   return (
     <div className="w-full">
+      <ToastContainer />
       {loading ? (
         <div className="flex flex-col items-center gap-2">
           {Array.from({ length: 10 }).map((_, rowIndex) => (
@@ -227,8 +251,16 @@ export const CinemaBooking = ({ screenId }: any) => {
           <div className="flex justify-center">
             <Sheet>
               <SheetTrigger asChild>
-                <Button className="my-5">Checkout</Button>
+                <Button
+                  className="my-5 disabled:bg-gray-500 font-light"
+                  disabled={selectedSeats.length === 0}
+                >
+                  {selectedSeats.length === 0
+                    ? "Select at least one seat"
+                    : "Checkout"}
+                </Button>
               </SheetTrigger>
+
               <SheetContent side={"bottom"} className="w-full h-1/3">
                 <SheetHeader>
                   <SheetTitle>Are you absolutely sure?</SheetTitle>
@@ -247,16 +279,19 @@ export const CinemaBooking = ({ screenId }: any) => {
                       </span>
                     </div>
                     <div className="mt-1 text-base text-black">
-                      {/* <h1>{rows}</h1> */}
-                      Sound Type:
+                      Sound Type:{" "}
                       <span className="text-400 text-xs font-normal">
                         {soundType}
-                      </span>{" "}
+                      </span>
                     </div>
                   </SheetDescription>
                 </SheetHeader>
                 <SheetFooter>
-                  <Button onClick={handleCheckout} variant={"ghost"}>
+                  <Button
+                    onClick={handleCheckout}
+                    variant={"ghost"}
+                    className="mr-36 mb-28"
+                  >
                     Pay
                   </Button>
                 </SheetFooter>

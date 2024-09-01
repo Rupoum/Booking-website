@@ -61,7 +61,7 @@ const Signup = () => {
     }
   };
 
-  if (auth?.isAuthenticated) return <div>You are already Signed in</div>;
+  // if (auth?.isAuthenticated) return <div>You are already Signed in</div>;
 
   return (
     <div className="mt-24 rounded-xl bg-black/80 py-10 px-6 md:mt-0 md:max-w-sm md:px-14">

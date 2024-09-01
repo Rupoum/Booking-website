@@ -11,9 +11,7 @@ const page = ({ params }: any) => {
       <div className="w-full h-32 py-5">
         <MovieDetails screenId={params.id} />
       </div>
-      <div className="px-24">
-        <Datecard />
-      </div>
+      <div className="px-24"></div>
       <div className="mt-10">
         <CinemaBooking screenId={params.id} />
       </div>

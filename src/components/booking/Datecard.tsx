@@ -1,5 +1,5 @@
-import * as React from "react";
-
+"use client";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -9,26 +9,48 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export function Datecard() {
+type DatecardProps = {
+  dates?: Date[];
+  onSelectDate: (date: Date) => void;
+};
+
+export function Datecard({ dates = [], onSelectDate }: DatecardProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const handleDateClick = (date: Date) => {
+    setSelectedDate(date);
+    onSelectDate(date);
+  };
+
   return (
-    <Carousel
-      opts={{
-        align: "start",
-      }}
-      className="sm:w-44 w-12 "
-    >
-      <CarouselContent className="">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <CarouselItem key={index} className="md:basis-9 lg:basis-auto">
-            <div className="">
-              <Card className="w-10 h-10 ">
-                <CardContent className="flex  items-center justify-center p-3   ">
-                  <span className="text-xs font-semibold">{index + 1}</span>
+    <Carousel opts={{ align: "start" }} className="sm:w-80 w-12">
+      <CarouselContent>
+        {dates.map((date, index) => {
+          const isSelected =
+            selectedDate?.toDateString() === date.toDateString();
+          return (
+            <CarouselItem
+              key={index}
+              className="md:basis-9 lg:basis-auto"
+              onClick={() => handleDateClick(date)}
+            >
+              <Card
+                className={`w-20 h-10 cursor-pointer hover:bg-green-200 ${
+                  isSelected ? "bg-green-600 text-white" : ""
+                }`}
+              >
+                <CardContent className="flex items-center justify-center p-3">
+                  <span className="text-xs font-semibold">
+                    {date.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
                 </CardContent>
               </Card>
-            </div>
-          </CarouselItem>
-        ))}
+            </CarouselItem>
+          );
+        })}
       </CarouselContent>
       <CarouselPrevious />
       <CarouselNext />
