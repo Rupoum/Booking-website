@@ -46,6 +46,7 @@ export const CinemaBooking = ({ screenId }: any) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [isTokenAvailable, setIsTokenAvailable] = useState<boolean>(true);
+  const [booking, setBooking] = useState("");
 
   useEffect(() => {
     const fetchSeatDetails = async () => {

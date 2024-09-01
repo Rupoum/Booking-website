@@ -30,7 +30,11 @@ const HeaderNav = () => {
     >
       <NavbarBrand>
         <Link href={"/"}>
-          <p className="font-bold text-inherit">LOGO</p>
+          <img
+            alt="logo"
+            src="../../../assets/logo4.gif"
+            className="w-28 h-20"
+          />
         </Link>
       </NavbarBrand>
       <NavbarContent className=" sm:flex gap-4" justify="center">
