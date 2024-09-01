@@ -210,6 +210,7 @@ const CreateCinemaContent: React.FC = () => {
         />
         <Button
           type="submit"
+          variant="outline"
           className="mt-6 text-black dark:text-black"
           disabled={loading}
         >
