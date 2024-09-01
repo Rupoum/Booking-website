@@ -30,6 +30,7 @@ type CinemaDetailsType = {
   time: Showtime[][];
   screenid: string;
   posterUrl: string;
+  moviegenre: string;
 };
 
 const CinemaDetails = ({ movieId }: any) => {
@@ -135,14 +136,15 @@ const CinemaDetails = ({ movieId }: any) => {
           <h1 className="font-sans text-4xl">{cinemaDetails[0].moviename}</h1>
 
           <div className="w-fit px-2 justify-center my-2 text-gray-500 py-2 flex items-center border-2 h-6 rounded-2xl border-gray-400 uppercase text-xs">
-            comedy
+            {cinemaDetails[0].moviegenre ? cinemaDetails[0].moviegenre : "N/A"}
           </div>
+
           <Datecard dates={availableDates} onSelectDate={handleDateSelect} />
         </div>
       </div>
 
-      <div className="bg-gray-100 px-20 py-10 w-full h-auto">
-        <div className="w-full bg-white py-10">
+      <div className="bg-gray-100 px-0 sm:px-20 py-10 w-full h-auto">
+        <div className="w-full bg-white py-0 sm:py-10">
           {cinemaDetails.map((cinema, index) => {
             const showtimeArray = cinema.time.flatMap(filteredShowtimes);
             const hasShowtimes = showtimeArray.length > 0;
@@ -152,12 +154,12 @@ const CinemaDetails = ({ movieId }: any) => {
                 key={index}
                 className="w-full py-5 min-h-56 max-h-auto border-b-2"
               >
-                <div className="flex justify-start h-auto">
+                <div className="flex justify-start  h-auto">
                   <div className="flex items-start pl-12 pt-3 text-[0.9rem] flex-col font-semibold w-1/3">
                     <div className="flex ">
                       <div className="sm:w-40 w-20  flex justify-evenly">
                         <div>{cinema.name}</div>{" "}
-                        <div className="sm:ml-44  text-gray-400  flex gap-1">
+                        <div className="sm:ml-11  text-gray-400  flex gap-1">
                           <AlertDialog>
                             <AlertDialogTrigger>
                               {" "}
@@ -227,7 +229,7 @@ const CinemaDetails = ({ movieId }: any) => {
                         </div>
                       </div>
                     </div>
-                    <div className=" flex gap-10 mt-16">
+                    <div className=" hidden sm:flex gap-2 sm:gap-7 mt-16 ">
                       <div className="flex text-sm gap-1 text-green-600 ">
                         {" "}
                         <span>

@@ -1,5 +1,5 @@
 "use client";
-import ComingSoon from "@/components/Home/ComingSoon";
+
 import CurrentlyPlaying from "@/components/Home/CurrentlyPlaying";
 
 import { SwipeCarousel } from "@/components/Home/SwipeCarousel";
@@ -17,7 +17,6 @@ export default function Home() {
       </div>
       <CurrentlyPlaying />
 
-      <ComingSoon />
       <Footer />
     </div>
   );

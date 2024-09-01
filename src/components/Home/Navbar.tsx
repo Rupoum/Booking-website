@@ -29,7 +29,9 @@ const HeaderNav = () => {
       className="h-14 sm:px-16 px-4  z-10 text-black dark:bg-transparent dark:text-white"
     >
       <NavbarBrand>
-        <p className="font-bold text-inherit">LOGO</p>
+        <Link href={"/"}>
+          <p className="font-bold text-inherit">LOGO</p>
+        </Link>
       </NavbarBrand>
       <NavbarContent className=" sm:flex gap-4" justify="center">
         <NavbarItem>

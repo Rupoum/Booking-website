@@ -74,12 +74,12 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
     <div className="m-10">
       <div className="flex justify-between">
         <h2>Currently Playing</h2>
-        <Button variant="link" className="text-xs">
+        {/* <Button variant="link" className="text-xs">
           See more{" "}
           <span className="ml-2">
             <MoveRight />
           </span>
-        </Button>
+        </Button> */}
       </div>
       <div className="mt-10 mx-14 flex flex-wrap justify-start">
         <Carousel
@@ -173,7 +173,7 @@ const CurrentlyPlaying = ({}: IListMoviesProps) => {
                   <p>Director: {selectedMovie?.director}</p>
                 </DialogDescription>
               </div>
-              <div className="ml-10">other things</div>
+              <div className="ml-10">Movie details</div>
             </div>
             <Button
               onClick={handleBookTickets}

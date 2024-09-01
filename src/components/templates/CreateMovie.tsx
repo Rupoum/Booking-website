@@ -18,6 +18,7 @@ enum Genre {
   Horror = "Horror",
   Drama = "Drama",
   Brutal = "Brutal",
+  Select = "",
 }
 
 export const CreateMovie = () => {

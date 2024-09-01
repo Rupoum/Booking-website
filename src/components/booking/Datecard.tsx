@@ -23,7 +23,7 @@ export function Datecard({ dates = [], onSelectDate }: DatecardProps) {
   };
 
   return (
-    <Carousel opts={{ align: "start" }} className="sm:w-80 w-12">
+    <Carousel opts={{ align: "center" }} className="w-24 ml-12 sm:ml-0 sm:w-44">
       <CarouselContent>
         {dates.map((date, index) => {
           const isSelected =
@@ -31,7 +31,7 @@ export function Datecard({ dates = [], onSelectDate }: DatecardProps) {
           return (
             <CarouselItem
               key={index}
-              className="md:basis-9 lg:basis-auto"
+              className="md:basis-auto lg:basis-auto"
               onClick={() => handleDateClick(date)}
             >
               <Card
