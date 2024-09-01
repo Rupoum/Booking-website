@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { User } from "lucide-react";
-import { ModeToggle } from "../ui/themeToggle";
+// import { ModeToggle } from "../ui/themeToggle";
 import Logout from "../Logoutbtn";
 import { RecoilRoot } from "recoil";
 // import StaggeredDropDown from "../Profile";
@@ -40,7 +40,7 @@ const HeaderNav = () => {
           {/* <h2>hello2</h2> */}
         </NavbarItem>
         <NavbarItem className="hidden sm:block">
-          <ModeToggle />
+          {/* <ModeToggle /> */}
         </NavbarItem>
       </NavbarContent>
     </Navbar>

@@ -50,7 +50,9 @@ const CinemaDetails = ({ movieId }: any) => {
       .then((response) => {
         const details = response.data;
         setCinemaDetails(details);
+        console.log(details);
         const datesSet = new Set<string>();
+
         details.forEach((cinema) => {
           cinema.time.forEach((showtimeArray) => {
             showtimeArray.forEach((showtime) => {

@@ -57,6 +57,8 @@ const OTPPage = () => {
           token: token,
         });
         localStorage.setItem("authtoken", token);
+        localStorage.setItem("user", email);
+
         console.log(user.role);
         router.push("/");
       } else {

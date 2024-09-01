@@ -39,6 +39,7 @@ const Login = () => {
           role: "sd",
         });
         localStorage.setItem("authtoken", token);
+        localStorage.setItem("user", formdata.email);
         console.log(user.role);
         router.push("/admin/");
       } else {

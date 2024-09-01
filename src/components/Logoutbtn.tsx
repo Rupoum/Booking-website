@@ -34,6 +34,7 @@ export default function Logout() {
 
   const logout = () => {
     localStorage.removeItem("authtoken");
+    localStorage.removeItem("user");
     setUserId(null);
   };
 
