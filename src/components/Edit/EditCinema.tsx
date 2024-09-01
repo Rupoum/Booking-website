@@ -317,16 +317,7 @@ const EditCinema: React.FC<{ cinemaId?: string }> = ({ cinemaId }) => {
             />
           </Label>
         </div>
-        <div className="mb-4">
-          <Label title="Manager ID">
-            <Input
-              name="managerId"
-              value={formData.managerId}
-              onChange={handleInputChange}
-              required
-            />
-          </Label>
-        </div>
+
         <div className="mb-4">
           <Label title="Address">
             <TextArea

@@ -1,5 +1,3 @@
-// components/TicketCard.js
-
 import React from "react";
 import {
   Card,
@@ -11,9 +9,32 @@ import {
 } from "@/components/ui/card";
 import { PhoneCall } from "lucide-react";
 import Link from "next/link";
-const TicketCard = ({ ticket }: any) => {
+import { format } from "date-fns";
+interface TicketProps {
+  ticket: {
+    image: string;
+    title: string;
+    details: string;
+    dateTime: string;
+    location: string;
+    tickets: number;
+    screen: string;
+    seats: string;
+    bookingId: string;
+    price: number;
+  };
+}
+
+const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
+  // Parse the dateTime string into a Date object
+  const date = new Date(ticket.dateTime);
+
+  // Format the date and time using date-fns
+  const formattedDate = format(date, "MMMM dd, yyyy");
+  const formattedTime = format(date, "hh:mm a");
+
   return (
-    <div className="w-full h-screen bg-gray-200 flex justify-center items-center">
+    <div className="w-full h-screen  flex justify-center items-center">
       <div className="w-[30rem] min-h-[40rem] bg-white px-7 py-10 rounded-xl">
         <div className="flex">
           <div>
@@ -28,14 +49,15 @@ const TicketCard = ({ ticket }: any) => {
           <div className="px-7">
             <div className="font-bold text-xl">{ticket.title}</div>
             <div className="text-base text-gray-500">{ticket.details}</div>
-            <div className="text-base text-gray-500"> {ticket.dateTime}</div>
+            <div className="text-base text-gray-500">{formattedDate}</div>
+            <div className="text-base text-gray-500">{formattedTime}</div>
             <div className="text-base text-gray-500">{ticket.location}</div>
           </div>
         </div>
         <div className="w-full h-[0.1rem] bg-gray-200 my-10"></div>
         <div className="bg-gray-100 rounded-xl flex items-center justify-center py-10 ">
           <div className="text-center flex flex-col gap-2">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center justify-center">
               <div className="text-base text-gray-500">
                 {ticket.tickets} Ticket(s)
               </div>

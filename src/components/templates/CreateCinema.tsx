@@ -43,6 +43,7 @@ interface CinemaFormData {
   name: string;
   managerId: string;
   Address: string;
+  posterUrl: string | File;
   screens: ScreenState[];
 }
 
@@ -59,6 +60,7 @@ const initialFormData: CinemaFormData = {
   name: "",
   managerId: "",
   Address: "",
+  posterUrl: "",
   screens: [
     {
       ...initialScreenState,
@@ -72,17 +74,18 @@ const CreateCinemaContent: React.FC = () => {
   const [formdata, setFormData] = useState<CinemaFormData>(initialFormData);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   const router = useRouter();
   const { toast } = useToast();
 
   const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target as HTMLInputElement;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: files && files[0] ? files[0] : value,
     }));
   };
 
@@ -111,28 +114,36 @@ const CreateCinemaContent: React.FC = () => {
       return { ...prevData, screens };
     });
   };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const cinema = {
-      name: formdata.name,
-      Address: formdata.Address,
-      // managerId: formdata.managerId,
-      screens: formdata.screens.map((screen) => ({
-        projectionType: screen.projectionType,
-        soundSystemType: screen.soundSystemType,
-        rows: screen.rows,
-        columns: screen.columns,
-        price: screen.price,
-        screenno: screen.screenno,
-      })),
-    };
-
     try {
-      const response = await axios.post(
+      let posterUrl = formdata.posterUrl;
+      if (posterUrl && posterUrl instanceof File) {
+        setUploading(true);
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `cinema_posters/${posterUrl.name}`);
+        await uploadBytes(storageRef, posterUrl);
+        posterUrl = await getDownloadURL(storageRef);
+        setUploading(false);
+      }
+
+      const cinema = {
+        ...formdata,
+        posterUrl, // Save the URL after upload
+        screens: formdata.screens.map((screen) => ({
+          projectionType: screen.projectionType,
+          soundSystemType: screen.soundSystemType,
+          rows: screen.rows,
+          columns: screen.columns,
+          price: screen.price,
+          screenno: screen.screenno,
+        })),
+      };
+
+      await axios.post(
         "https://bookmyshowfinal.onrender.com/api/cinema/cinema",
         cinema,
         {
@@ -143,8 +154,8 @@ const CreateCinemaContent: React.FC = () => {
       );
       toast({ title: "Cinema created successfully." });
       setLoading(false);
-      // revalidatePath("admins/cinemas");
-      // router.replace("/admin/cinemas");
+
+      router.replace("/admin/cinemas");
     } catch (error: any) {
       setLoading(false);
       setError(error.response?.data?.message || "Failed to create cinema");

@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const page = ({ params }: any) => {
+const Page = ({ params }: any) => {
   const [bookingData, setBookingData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,7 @@ const page = ({ params }: any) => {
           `https://bookmyshowfinal.onrender.com/api/customer/booking/${params.id}`
         );
         const data = await response.data;
-        setBookingData(data.booking);
+        setBookingData(data.booking || []); // Ensure bookingData is always an array
       } catch (error) {
         console.error("Error fetching booking data:", error);
       } finally {
@@ -69,7 +69,7 @@ const page = ({ params }: any) => {
           <TableRow>
             <TableCell className="font-medium">Movie ID</TableCell>
             <TableCell>
-              {bookingData.length === 0 ? (
+              {Array.isArray(bookingData) && bookingData.length === 0 ? (
                 <div>No bookings available</div>
               ) : (
                 bookingData.map((booking) => (
@@ -151,4 +151,4 @@ const page = ({ params }: any) => {
   );
 };
 
-export default page;
+export default Page;

@@ -153,57 +153,60 @@ const CinemaDetails = ({ movieId }: any) => {
                 <div className="flex justify-start h-auto">
                   <div className="flex items-start pl-12 pt-3 text-[0.9rem] flex-col font-semibold w-1/3">
                     <div className="flex ">
-                      <div className="w-40">{cinema.name}</div>
-
-                      <div className="ml-44 text-gray-400 flex gap-1">
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            {" "}
-                            <span>
-                              <ShieldAlert />
-                            </span>{" "}
-                            Info
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>{cinema.name}</AlertDialogTitle>
-                            </AlertDialogHeader>
-                            <div className="w-full h-60 bg-red-50">Image</div>
-                            <div className="w-full h-24 text-lg border-gray-200 border-y-2   ">
-                              {cinema.address}
-                            </div>
-                            <div>
-                              <div>Availiable facilities</div>
-                              <div className="flex justify-between px-6 mt-5 text-xs">
-                                <div className="flex flex-col items-center">
-                                  <div>
-                                    <Ticket />
+                      <div className="sm:w-40 w-20  flex justify-evenly">
+                        <div>{cinema.name}</div>{" "}
+                        <div className="sm:ml-44  text-gray-400  flex gap-1">
+                          <AlertDialog>
+                            <AlertDialogTrigger>
+                              {" "}
+                              <span>
+                                <ShieldAlert />
+                              </span>{" "}
+                              Info
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  {cinema.name}
+                                </AlertDialogTitle>
+                              </AlertDialogHeader>
+                              <div className="w-full h-60 bg-red-50">Image</div>
+                              <div className="w-full h-24 text-lg border-gray-200 border-y-2   ">
+                                {cinema.address}
+                              </div>
+                              <div>
+                                <div>Availiable facilities</div>
+                                <div className="flex justify-between px-6 mt-5 text-xs">
+                                  <div className="flex flex-col items-center">
+                                    <div>
+                                      <Ticket />
+                                    </div>
+                                    <div> Ticket Cancelation</div>
                                   </div>
-                                  <div> Ticket Cancelation</div>
-                                </div>
-                                <div className="flex flex-col items-center">
-                                  <div>
-                                    <Popcorn />
+                                  <div className="flex flex-col items-center">
+                                    <div>
+                                      <Popcorn />
+                                    </div>
+                                    <div> F&B</div>
                                   </div>
-                                  <div> F&B</div>
-                                </div>
-                                <div className="flex flex-col items-center">
-                                  <div>
-                                    <Accessibility />
+                                  <div className="flex flex-col items-center">
+                                    <div>
+                                      <Accessibility />
+                                    </div>
+                                    <div>Wheel Chair Facility </div>
                                   </div>
-                                  <div>Wheel Chair Facility </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="flex justify-center w-full my-4">
-                              <AlertDialogFooter>
-                                <AlertDialogCancel className="text-center">
-                                  Continue Booking
-                                </AlertDialogCancel>
-                              </AlertDialogFooter>
-                            </div>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                              <div className="flex justify-center w-full my-4">
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel className="text-center">
+                                    Continue Booking
+                                  </AlertDialogCancel>
+                                </AlertDialogFooter>
+                              </div>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </div>
                     </div>
                     <div className=" flex gap-10 mt-16">
