@@ -18,6 +18,20 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "../ui/button";
 import { Edit2, Trash } from "lucide-react";
 
 interface Screen {
@@ -49,7 +63,9 @@ const CinemaLists = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1); // Current page state
   const [itemsPerPage] = useState(2); // Items per page
-
+  const [selectedMovie, setSelectedMovie] = useState({ name: "", _id: "" });
+  const [inputValue, setInputValue] = useState<string>("");
+  const router = useRouter();
   useEffect(() => {
     const fetchCinemas = async () => {
       setLoading(true);
@@ -69,6 +85,37 @@ const CinemaLists = () => {
     fetchCinemas();
   }, []);
 
+  const deleteMovie = async () => {
+    const url = selectedMovie._id;
+    console.log(url);
+
+    try {
+      const response = await axios.delete(
+        `https://bookmyshowfinal.onrender.com/api/cinema/cinema/${selectedMovie._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authtoken")}`,
+          },
+        }
+      );
+      setTimeout(() => {
+        // router.push("/admin/listmovie");
+        router.refresh(); // Navigate to the desired route
+      }, 2000);
+      toast("Movie delted succesfully");
+
+      // Here you would typically update your state to remove the deleted movie
+      // setMovies(prevMovies => prevMovies.filter(movie => movie.id !== movies.id));
+    } catch (error) {
+      console.error("Error deleting movie", error);
+      toast.error("Error deleting movie");
+
+      // Optionally, set an error state to display to the user
+    } finally {
+      setLoading(false); // End loading regardless of success or failure
+    }
+  };
+
   const handleScreenCountClick = (screens: Screen[]) => {
     setSelectedScreens(screens);
     setIsDialogOpen(true);
@@ -87,6 +134,12 @@ const CinemaLists = () => {
   );
   // Calculate total pages
   const totalPages = Math.ceil(filteredCinemas.length / itemsPerPage);
+  const handleInputChange = (e: any) => {
+    setInputValue(e.target.value);
+  };
+
+  const isDeleteEnabled = selectedMovie && inputValue === selectedMovie.name;
+
   if (loading) {
     return (
       <div>
@@ -133,7 +186,10 @@ const CinemaLists = () => {
 
   return (
     <div>
-      <div className="mb-4">
+      <h2 className="text-2xl font-bold flex justify-center my-9">
+        List of cinemas
+      </h2>
+      <div className="mb-4 w-1/2">
         <Input
           type="text"
           placeholder="Search by Cinema Name"
@@ -212,32 +268,67 @@ const CinemaLists = () => {
               <TableCell>
                 <div className="flex gap-1 ">
                   <Edit2 className="w-5 h-5" /> <span />
-                  <Trash className="w-5 h-5" />
+                  <div>
+                    <Drawer>
+                      <DrawerTrigger>
+                        <Trash
+                          className="w-5 h-5 hover:text-red-600"
+                          onClick={() => setSelectedMovie(cinema)}
+                        />
+                      </DrawerTrigger>
+                      <DrawerContent className="px-20">
+                        <DrawerHeader>
+                          <DrawerTitle>
+                            Are you sure you want to delete the cinema{" "}
+                            {cinema.name}{" "}
+                          </DrawerTitle>
+                          <DrawerDescription>
+                            You can not revert back !
+                          </DrawerDescription>
+                        </DrawerHeader>
+
+                        <div className="my-4">
+                          <input
+                            type="text"
+                            placeholder="Type cinema name to confirm"
+                            value={inputValue}
+                            onChange={handleInputChange}
+                            className="border p-2 w-full"
+                          />
+                        </div>
+                        <DrawerFooter>
+                          <div className="flex justify-center items-center gap-2">
+                            <div className="">
+                              <Button
+                                variant="destructive"
+                                className="w-36 flex justify-center items-center gap-2 "
+                                disabled={!isDeleteEnabled}
+                                onClick={deleteMovie}
+                              >
+                                {loading ? "Deleting..." : "Delete Movie"}
+                                <span>
+                                  <Trash />
+                                </span>
+                              </Button>
+                            </div>
+                            <div>
+                              <DrawerClose>
+                                <Button variant="outline" className="w-28">
+                                  Cancel
+                                </Button>
+                              </DrawerClose>
+                            </div>
+                          </div>
+                        </DrawerFooter>
+                      </DrawerContent>
+                    </Drawer>
+                  </div>
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
-      {/* Pagination Controls */}
-      {/* <Pagination>
-        <PaginationPrevious
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-        />
-        {Array.from({ length: totalPages }, (_, index) => (
-          <PaginationItem key={index} onClick={() => setCurrentPage(index + 1)}>
-            {index + 1}
-          </PaginationItem>
-        ))}
-        <PaginationNext
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-        />
-      </Pagination> */}
-
-      {/* Dialog for displaying screen details */}
     </div>
   );
 };
