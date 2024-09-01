@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 import { Edit2, Trash } from "lucide-react";
+import Link from "next/link";
 
 interface Screen {
   screenno: number;
@@ -102,7 +103,7 @@ const CinemaLists = () => {
         // router.push("/admin/listmovie");
         router.refresh(); // Navigate to the desired route
       }, 2000);
-      toast("Movie delted succesfully");
+      toast("Cinema delted succesfully");
 
       // Here you would typically update your state to remove the deleted movie
       // setMovies(prevMovies => prevMovies.filter(movie => movie.id !== movies.id));
@@ -267,7 +268,10 @@ const CinemaLists = () => {
               </TableCell>
               <TableCell>
                 <div className="flex gap-1 ">
-                  <Edit2 className="w-5 h-5" /> <span />
+                  <Link href={`/admin/edit-cinema/${cinema._id}`}>
+                    <Edit2 className="w-5 h-5 cursor-pointer" />
+                  </Link>{" "}
+                  <span />
                   <div>
                     <Drawer>
                       <DrawerTrigger>
