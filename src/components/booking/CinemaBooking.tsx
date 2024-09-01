@@ -286,15 +286,11 @@ export const CinemaBooking = ({ screenId }: any) => {
                     </div>
                   </SheetDescription>
                 </SheetHeader>
-                <SheetFooter>
-                  <Button
-                    onClick={handleCheckout}
-                    variant={"ghost"}
-                    className="mr-36 mb-28"
-                  >
+                <div className=" flex justify-end mr-16">
+                  <Button onClick={handleCheckout} variant="secondary">
                     Pay
                   </Button>
-                </SheetFooter>
+                </div>
               </SheetContent>
             </Sheet>
           </div>

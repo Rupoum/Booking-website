@@ -118,6 +118,7 @@ export const CreateShowtime = () => {
         <Label title="Movie">
           <select
             title="movieId"
+            name="movieId"
             value={form.movieId}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded border-input"
@@ -134,6 +135,7 @@ export const CreateShowtime = () => {
         <Label title="Screen number">
           <select
             title="screenId"
+            name="screenId"
             value={form.screenId}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded border-input"
