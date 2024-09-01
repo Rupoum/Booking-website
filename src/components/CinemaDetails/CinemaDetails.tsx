@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Card, CardContent } from "../ui/card";
 
 type Showtime = {
   time: string;
@@ -28,6 +29,7 @@ type CinemaDetailsType = {
   moviename: string;
   time: Showtime[][];
   screenid: string;
+  posterUrl: string;
 };
 
 const CinemaDetails = ({ movieId }: any) => {
@@ -170,7 +172,23 @@ const CinemaDetails = ({ movieId }: any) => {
                                   {cinema.name}
                                 </AlertDialogTitle>
                               </AlertDialogHeader>
-                              <div className="w-full h-60 bg-red-50">Image</div>
+                              <div className="w-full h-60 bg-red-50">
+                                {cinema.posterUrl ? (
+                                  <Card
+                                    className="relative w-full h-60 justify-between bg-cover bg-center"
+                                    style={{
+                                      backgroundImage: `url('${cinema.posterUrl}')`,
+                                    }}
+                                  />
+                                ) : (
+                                  <Card>
+                                    <CardContent className="relative w-full flex justify-center items-center bg-gray-300 h-60 ">
+                                      Cinema image not available
+                                    </CardContent>
+                                  </Card>
+                                )}
+                              </div>
+
                               <div className="w-full h-24 text-lg border-gray-200 border-y-2   ">
                                 {cinema.address}
                               </div>
@@ -179,19 +197,19 @@ const CinemaDetails = ({ movieId }: any) => {
                                 <div className="flex justify-between px-6 mt-5 text-xs">
                                   <div className="flex flex-col items-center">
                                     <div>
-                                      <Ticket />
+                                      <Ticket className="text-red-600" />
                                     </div>
                                     <div> Ticket Cancelation</div>
                                   </div>
                                   <div className="flex flex-col items-center">
                                     <div>
-                                      <Popcorn />
+                                      <Popcorn className="text-yellow-500" />
                                     </div>
                                     <div> F&B</div>
                                   </div>
                                   <div className="flex flex-col items-center">
                                     <div>
-                                      <Accessibility />
+                                      <Accessibility className="" />
                                     </div>
                                     <div>Wheel Chair Facility </div>
                                   </div>

@@ -1,12 +1,11 @@
 "use client";
 import ComingSoon from "@/components/Home/ComingSoon";
 import CurrentlyPlaying from "@/components/Home/CurrentlyPlaying";
-import Header2 from "@/components/Home/Header2";
-import MainHeader from "@/components/Home/MainHeader";
+
 import { SwipeCarousel } from "@/components/Home/SwipeCarousel";
 import Navbar from "@/components/Home/Navbar";
 import Footer from "@/components/Home/Footer";
-import CinemaDetails from "@/components/CinemaDetails/CinemaDetails";
+
 import { Suspense } from "react";
 
 // import { Route } from "lucide-react";

@@ -13,6 +13,8 @@ import { SimpleAccordion } from "../molecules/SimpleAccordion";
 import { Plus } from "lucide-react";
 // import { ProjectionType, SoundSystemTypes } from "../forms/createCinema";
 import { Square } from "../organism/map/ScreenUtils";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { app } from "@/components/utils/config/firebase";
 import { revalidatePath } from "../utils/actions/revalidatePath";
 
 enum ProjectionType {
@@ -155,7 +157,7 @@ const CreateCinemaContent: React.FC = () => {
       toast({ title: "Cinema created successfully." });
       setLoading(false);
 
-      router.replace("/admin/cinemas");
+      router.replace("/admin/listcinema");
     } catch (error: any) {
       setLoading(false);
       setError(error.response?.data?.message || "Failed to create cinema");
@@ -184,6 +186,21 @@ const CreateCinemaContent: React.FC = () => {
             value={formdata.Address}
             onChange={handleInputChange}
           />
+        </Label>
+        <Label title="Poster" className="text-2xl">
+          <Input
+            type="file"
+            accept="image/*"
+            name="posterUrl"
+            onChange={handleInputChange}
+          />
+          {formdata.posterUrl && typeof formdata.posterUrl === "string" && (
+            <img
+              src={formdata.posterUrl}
+              alt="Cinema Poster"
+              className="max-w-xs mt-2"
+            />
+          )}
         </Label>
         <AddScreens
           screens={formdata.screens}
